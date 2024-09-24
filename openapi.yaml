@@ -1,0 +1,309 @@
+openapi: 3.0.0
+info:
+  title: 記録アプリ API
+  description: 鑑賞した映画、本、ブログの記録できるアプリのAPI
+  version: 1.0.0
+servers:
+  - url: https://api.example.com/v1
+    description: 本番
+  - url: http://localhost:8080/v1
+    description: ローカル
+paths:
+  /users/{userId}:
+    get:
+      summary: 個別ユーザー取得
+      operationId: getUserById
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found
+        '500':
+          description: Server error
+    put:
+      summary: ユーザー更新
+      operationId: updateUser
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: User updated successfully
+        '404':
+          description: User not found
+        '500':
+          description: Server error
+
+  /users:
+    post:
+      summary: 新規ユーザー登録
+      operationId: createUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: User created successfully
+        '500':
+          description: Server error
+
+  /users/{userId}/content:
+    get:
+      summary: 全記録取得
+      operationId: getAllContentByUser
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ContentWithLinks'
+        '404':
+          description: User not found
+        '500':
+          description: Server error
+    post:
+      summary: 新規記録登録
+      operationId: createContentWithLinks
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContentWithLinks'
+      responses:
+        '201':
+          description: Content with links created successfully
+        '500':
+          description: Server error
+
+  /users/{userId}/content/{contentId}:
+    get:
+      summary: 個別記録取得
+      operationId: getContentById
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: contentId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContentWithLinks'
+        '404':
+          description: Content not found
+        '500':
+          description: Server error
+    put:
+      summary: 記録更新
+      operationId: updateContentWithLinks
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: contentId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContentWithLinks'
+      responses:
+        '200':
+          description: Content with links updated successfully
+        '404':
+          description: Content not found
+        '500':
+          description: Server error
+    delete:
+      summary: 記録削除
+      operationId: deleteContentAndLinks
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: contentId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Content and links deleted successfully
+        '404':
+          description: Content not found
+        '500':
+          description: Server error
+
+  /users/{userId}/best-content:
+    get:
+      summary: 年度別ベスト取得
+      operationId: getBestContentByYearAndType
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: year
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: type
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [movie, book, blog]
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Content'
+        '404':
+          description: No content found for specified year and type
+        '500':
+          description: Server error
+    post:
+      summary: 年度別ベスト登録・更新
+      operationId: createOrUpdateBestContent
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BestContent'
+      responses:
+        '200':
+          description: Best content updated successfully
+        '500':
+          description: Server error
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        userId:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+    Content:
+      type: object
+      properties:
+        contentId:
+          type: string
+        userId:
+          type: string
+        title:
+          type: string
+        type:
+          type: string
+        year:
+          type: integer
+        dateWatched:
+          type: string
+          format: date
+        notes:
+          type: string
+        is_best:
+          type: boolean
+        rank:
+          type: integer
+        status:
+          type: string
+    ContentWithLinks:
+      type: object
+      properties:
+        content:
+          $ref: '#/components/schemas/Content'
+        externalLinks:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExternalLink'
+    ExternalLink:
+      type: object
+      properties:
+        id:
+          type: string
+        content_id:
+          type: string
+        link_type:
+          type: string
+        url:
+          type: string
+    BestContent:
+      type: object
+      properties:
+        year:
+          type: integer
+        type:
+          type: string
+          enum: [movie, book, blog]
+        best3:
+          type: array
+          items:
+            $ref: '#/components/schemas/Content'
