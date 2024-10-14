@@ -12,11 +12,8 @@ export default function ContentManager() {
 
   const confirm = async (email: string, code: string) => {
     try {
-      await confirmSignUp(email, code);
-
-      // TODO: 後ほど遷移先変更
-      router.push('/add-content');
-      console.log("confirm!")
+      const result = await confirmSignUp(email, code);
+      result.$metadata.httpStatusCode === 200 ? router.push('/add-content') : console.error("認証コードが違います:", result)
     } catch (error) {
       alert(`認証コードが違います: ${error}`);
     }

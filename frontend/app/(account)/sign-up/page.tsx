@@ -5,20 +5,21 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { useRouter } from 'next/navigation'
+import { signUp } from "@/app/hooks/authService"
 
 export default function ContentManager() {
   const router = useRouter();
 
   const handleSignUp = async (email: string, password: string, confirmPassword: string) => {
-    // TODO: フラッシュメッセージに変更
-    if (password !== confirmPassword) {
-      alert('確認用パスワードが違います');
-      return;
-    }
     try {
-      // await signUp(email, password);
-      router.push('/confirm');
-      console.log("sign up!")
+      // TODO: フラッシュメッセージに変更
+      if (password !== confirmPassword) {
+        alert('確認用パスワードが違います');
+        return;
+      }
+
+      const result = await signUp(email, password);
+      result.$metadata.httpStatusCode === 200 ? router.push('/confirm') : console.error("Sign up failed:", result)
     } catch (error) {
       alert(`Sign up failed: ${error}`);
     }

@@ -1,16 +1,21 @@
-from fastapi import HTTPException, Response, APIRouter
+import os
+from dotenv import load_dotenv
+from fastapi import HTTPException, APIRouter, status
 from pydantic import BaseModel
 import boto3
+from fastapi.responses import JSONResponse
 
-router = APIRouter(prefix="/account",)
+router = APIRouter(prefix="/account")
+
+load_dotenv()
 
 # Cognito設定
-COGNITO_REGION = "ap-northeast-1"  # リージョン
-COGNITO_USER_POOL_ID = "ap-northeast-1_opoYPW1ze"  # ユーザープールID
-COGNITO_APP_CLIENT_ID = "56tvselb1i26o0bi4c748tk64g"  # アプリクライアントID
+COGNITO_CLIENT_ID = os.getenv('COGNITO_CLIENT_ID')
+COGNITO_APP_CLIENT_ID = os.getenv('COGNITO_APP_CLIENT_ID')
+AWS_REGION = os.getenv('AWS_REGION')
 
 # Boto3クライアント作成
-client = boto3.client('cognito-idp', region_name=COGNITO_REGION)
+client = boto3.client('cognito-idp', region_name=AWS_REGION)
 
 # リクエスト用のデータモデル
 class AuthRequest(BaseModel):
@@ -18,7 +23,7 @@ class AuthRequest(BaseModel):
     password: str
 
 @router.post("/login/", tags=["account"])
-async def login(auth_request: AuthRequest, response: Response):
+async def login(auth_request: AuthRequest, response: JSONResponse):
     try:
         # Cognitoに対して認証リクエストを実行
         response = client.initiate_auth(
@@ -35,21 +40,16 @@ async def login(auth_request: AuthRequest, response: Response):
         access_token = response['AuthenticationResult']['AccessToken']
         refresh_token = response['AuthenticationResult']['RefreshToken']
 
-        response.set_cookie(
-          key="access_token",
-          value=access_token,
-          max_age=3600,
-          httponly=True,
-          # secure=True,    # Secure属性 (HTTPSでのみ送信)
-          samesite='Strict'
+        response = JSONResponse(content=
+            {"message": "Login successful"},
+            status_code=status.HTTP_200_OK
         )
+        # response.set_cookie(key="access_token", value=access_token, httponly=True, secure=True, samesite='Lax')  // TODO: 本番ではsecureを指定
+        response.set_cookie(key="access_token", value=access_token, httponly=True, samesite='Lax')
+        response.set_cookie(key="id_token", value=id_token, httponly=True, samesite='Lax')
+        response.set_cookie(key="refresh_token", value=refresh_token, httponly=True, samesite='Lax')
 
-        # トークンをフロントエンドに返す
-        return {
-            "id_token": id_token,
-            "access_token": access_token,
-            "refresh_token": refresh_token
-        }
+        return response
 
     except client.exceptions.NotAuthorizedException:
         # 認証エラー
