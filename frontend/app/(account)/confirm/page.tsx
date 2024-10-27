@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label"
 import { confirmSignUp } from '@/app/hooks/authService'
 import { useRouter } from 'next/navigation'
+import Link from "next/link"
 
 export default function ContentManager() {
   const router = useRouter();
@@ -23,8 +24,8 @@ export default function ContentManager() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-100 to-pink-100">
       <Card className="w-[350px] bg-white/80 backdrop-blur-sm shadow-lg">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center">認証コード送信</CardTitle>
-          <CardDescription className="text-center">Confirm your code</CardDescription>
+          <CardTitle className="text-2xl font-bold text-center">認証コードの確認</CardTitle>
+          <CardDescription>メールに届いた認証コードを入力して下さい</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={(e) => {
@@ -34,7 +35,7 @@ export default function ContentManager() {
           }}>
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="email">email</Label>
+                <Label htmlFor="email">メールアドレス</Label>
                 <Input id="email" name="email" placeholder="Enter your email" />
               </div>
               <div className="flex flex-col space-y-1.5">
@@ -43,6 +44,8 @@ export default function ContentManager() {
               </div>
             </div>
             <Button type="submit" className="mt-4 w-full">送信</Button>
+            <hr className="my-4 border-gray-400" />
+            <Link className="text-blue-500 hover:text-blue-800" href="/sign-up">新規登録はこちら</Link>
           </form>
         </CardContent>
       </Card>

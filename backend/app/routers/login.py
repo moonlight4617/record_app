@@ -10,7 +10,6 @@ router = APIRouter(prefix="/account")
 load_dotenv()
 
 # Cognito設定
-COGNITO_CLIENT_ID = os.getenv('COGNITO_CLIENT_ID')
 COGNITO_APP_CLIENT_ID = os.getenv('COGNITO_APP_CLIENT_ID')
 AWS_REGION = os.getenv('AWS_REGION')
 
