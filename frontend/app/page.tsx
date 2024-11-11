@@ -28,11 +28,13 @@ export default function ContentManager() {
           // email: email,
           password: password,
         }),
-        mode: "cors"
+        mode: "cors",
+        credentials: "include"
       })
       if (result.status == 200) {
         toast.success("ログインに成功しました");
-        return router.push('/add-content');
+        // TODO: URLは定数化
+        return router.push('/content');
       }
       const resultJson = await result.json();
       toast.error(`ログイン失敗しました: ${resultJson.detail}`)

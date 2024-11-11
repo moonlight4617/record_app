@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import React from 'react';
 
 interface TabsProps {
@@ -16,6 +16,7 @@ interface TabsContentProps {
   value: string;
   children: React.ReactNode;
   activeTab?: string;
+  isActive? : boolean;
 }
 
 export const Tabs: React.FC<TabsProps> = ({ defaultValue, children, className }) => {
@@ -32,13 +33,18 @@ export const Tabs: React.FC<TabsProps> = ({ defaultValue, children, className })
 };
 
 export const TabsList: React.FC<TabsListProps> = ({ children, className }) => {
-  return <div className={`flex space-x-4 ${className}`}>{children}</div>;
+  return <div className={`flex space-x-4 ${className} bg-gray-200`}>{children}</div>;
 };
 
-export const TabsTrigger: React.FC<{ value: string, children: React.ReactNode, className: string }> = ({ value, children, className }) => {
-  return <button className={`${className}`}>{children}</button>;
+export const TabsTrigger: React.FC<{ value: string, children: React.ReactNode, className: string, setTab: Dispatch<SetStateAction<string>> }> = ({ value, children, className, setTab }) => {
+  const handleClickTab = () => {
+    setTab(value)
+  }
+
+  return <button className={`${className} `}  onClick={() => handleClickTab()} >{children}</button>;
 };
 
-export const TabsContent: React.FC<TabsContentProps> = ({ value, children, activeTab }) => {
-  return activeTab === value ? <div>{children}</div> : null;
+export const TabsContent: React.FC<TabsContentProps> = ({ value, children, activeTab, isActive }) => {
+  // return activeTab === value ? <div>{children}</div> : null;
+  return isActive ? <div>{children}</div> : null;
 };
