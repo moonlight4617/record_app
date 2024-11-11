@@ -13,9 +13,7 @@ contents_db = []
 @router.post("/add", tags=["content"])
 async def add_content(content: ContentData):
     try:
-        # 本来であればここでデータベースに保存する処理を行う
         await create_content_service(content)
-
         return {"message": "Content added successfully"}
     except Exception as e:
         traceback.print_exc()
