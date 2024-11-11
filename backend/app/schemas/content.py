@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional
 from enum import Enum
 
@@ -8,10 +8,11 @@ class ContentType(str, Enum):
     blog = "blog"
 
 class ContentData(BaseModel):
-    contentId: str
+    contentId: str = Field(..., min_length=1)
     type: ContentType
-    title: str
+    title: str = Field(..., min_length=1)
     date: str
+    year: Optional[int] = None
     notes: Optional[str] = None
     link: Optional[str] = None
-    userId: str
+    userId: Optional[str] = None
