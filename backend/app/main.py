@@ -1,14 +1,17 @@
 # main.py
 from fastapi import FastAPI
 from mangum import Mangum
-from .routers import users
-from .routers import login
+from .routers import users, login, google_login, google_callback, add_content, get_years
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+origins = [
+    "http://localhost:3000",  # フロントエンドのURLを指定
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # フロントエンドのオリジンを許可
+    allow_origins=origins,  # フロントエンドのオリジンを許可
     allow_credentials=True,
     allow_methods=["*"],  # 全てのHTTPメソッドを許可
     allow_headers=["*"],  # 全てのヘッダーを許可
@@ -16,6 +19,10 @@ app.add_middleware(
 
 app.include_router(users.router)
 app.include_router(login.router)
+app.include_router(google_login.router)
+app.include_router(google_callback.router)
+app.include_router(add_content.router)
+app.include_router(get_years.router)
 
 @app.get("/")
 def read_root():

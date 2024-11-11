@@ -17,12 +17,12 @@ export const CardHeader: React.FC<CardProps> = ({ children }) => (
   </div>
 );
 
-export const CardTitle: React.FC<CardProps> = ({ children }) => (
-  <h2 className="text-xl font-bold">{children}</h2>
+export const CardTitle: React.FC<CardProps> = ({ className, children }) => (
+  <h2 className={`text-xl font-bold text-center ${className}`}>{children}</h2>
 );
 
 export const CardDescription: React.FC<CardProps> = ({ children }) => (
-  <p className="text-gray-600">{children}</p>
+  <p className="text-gray-500 text-sm">{children}</p>
 );
 
 export const CardContent: React.FC<CardProps> = ({ children }) => (

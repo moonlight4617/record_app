@@ -6,7 +6,7 @@ export const cognitoClient = new CognitoIdentityProviderClient({
 
 export const signUp = async (email: string, password: string) => {
   const params = {
-    ClientId: process.env.NEXT_PUBLIC_CLIENTID,
+    ClientId: process.env.NEXT_PUBLIC_CLIENT_ID,
     Username: email,
     Password: password,
     UserAttributes: [
@@ -29,7 +29,7 @@ export const signUp = async (email: string, password: string) => {
 
 export const confirmSignUp = async (username: string, code: string) => {
   const params = {
-    ClientId: process.env.NEXT_PUBLIC_CLIENTID,
+    ClientId: process.env.NEXT_PUBLIC_CLIENT_ID,
     Username: username,
     ConfirmationCode: code,
   };

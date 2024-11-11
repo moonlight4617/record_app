@@ -1,0 +1,7 @@
+services:
+  backend:
+    environment:
+      - AWS_PROFILE=record_local
+    volumes:
+      - ~/.aws/credentials:/root/.aws/credentials:ro
+      - ~/.aws/config:/root/.aws/config:ro

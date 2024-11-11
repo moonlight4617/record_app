@@ -4,13 +4,15 @@ from fastapi import HTTPException, APIRouter, status
 from pydantic import BaseModel
 import boto3
 from fastapi.responses import JSONResponse
+from app.services.user_service import get_sub_from_id_token
+from app.services.user_service import create_user_service
+
 
 router = APIRouter(prefix="/account")
 
 load_dotenv()
 
 # Cognito設定
-COGNITO_CLIENT_ID = os.getenv('COGNITO_CLIENT_ID')
 COGNITO_APP_CLIENT_ID = os.getenv('COGNITO_APP_CLIENT_ID')
 AWS_REGION = os.getenv('AWS_REGION')
 
@@ -35,10 +37,20 @@ async def login(auth_request: AuthRequest, response: JSONResponse):
             ClientId=COGNITO_APP_CLIENT_ID
         )
 
-        # 認証に成功したらトークンを取得
         id_token = response['AuthenticationResult']['IdToken']
         access_token = response['AuthenticationResult']['AccessToken']
         refresh_token = response['AuthenticationResult']['RefreshToken']
+
+        # 認証に成功したらトークンを取得
+        user = get_sub_from_id_token(id_token)
+
+        if not user:
+            raise HTTPException(status_code=401, detail="Invalid or expired token")
+
+        user_id, email, name = user
+
+        # TODO: 後ほどログインから削除し、ユーザー作成のロジックへ移動
+        # await create_user_service(user)
 
         response = JSONResponse(content=
             {"message": "Login successful"},
@@ -48,6 +60,7 @@ async def login(auth_request: AuthRequest, response: JSONResponse):
         response.set_cookie(key="access_token", value=access_token, httponly=True, samesite='Lax')
         response.set_cookie(key="id_token", value=id_token, httponly=True, samesite='Lax')
         response.set_cookie(key="refresh_token", value=refresh_token, httponly=True, samesite='Lax')
+        response.set_cookie(key="user_id", value=user_id, httponly=True, samesite='Lax')
 
         return response
 

@@ -25,21 +25,23 @@ interface SelectValueProps {
   placeholder: string;
 }
 
-export const Select: React.FC<SelectProps> = ({ children, name, value }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState<string | null>(null);
+export const Select: React.FC<SelectProps> = ({ children, name }) => {
+  const [selectedValue, setSelectedValue] = useState<string>('');
 
-  const handleSelect = (value: string) => {
-    setSelectedValue(value);
-    setIsOpen(false);
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedValue(e.target.value);
   };
 
   return (
     <div className="relative">
-      <input type="hidden" name={name} value={selectedValue || ''} />
-      {React.Children.map(children, (child) =>
-        React.cloneElement(child as React.ReactElement, { isOpen, setIsOpen, selectedValue, handleSelect })
-      )}
+      <select
+        name={name}
+        value={selectedValue}
+        onChange={handleChange}
+        className="border border-gray-300 rounded p-2 w-full text-left"
+      >
+        {children}
+      </select>
     </div>
   );
 };
@@ -56,22 +58,22 @@ export const SelectTrigger: React.FC<SelectTriggerProps> = ({ children, isOpen, 
   );
 };
 
-export const SelectContent: React.FC<SelectContentProps> = ({ children, isOpen }) => {
-  return isOpen ? (
-    <ul className="absolute z-10 mt-1 bg-white border border-gray-300 rounded shadow-lg w-full">
+export const SelectContent: React.FC<SelectContentProps> = ({ children }) => {
+  return (
+    <select className="border border-gray-300 rounded p-2 w-full text-left">
       {children}
-    </ul>
-  ) : null;
+    </select>
+  );
 };
 
-export const SelectItem: React.FC<SelectItemProps> = ({ value, children, handleSelect }) => {
+export const SelectItem: React.FC<SelectItemProps> = ({ value, children }) => {
   return (
-    <li
-      className="p-2 hover:bg-gray-100 cursor-pointer"
-      onClick={() => handleSelect(value)}
+    <option
+      className="text-gray-700"
+      value={value}
     >
       {children}
-    </li>
+    </option>
   );
 };
 
