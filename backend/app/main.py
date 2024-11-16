@@ -1,7 +1,7 @@
 # main.py
 from fastapi import FastAPI
 from mangum import Mangum
-from .routers import users, login, google_login, google_callback, add_content, get_years
+from .routers import users, login, google_login, google_callback, add_content, get_years, get_year_contents
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -23,6 +23,7 @@ app.include_router(google_login.router)
 app.include_router(google_callback.router)
 app.include_router(add_content.router)
 app.include_router(get_years.router)
+app.include_router(get_year_contents.router)
 
 @app.get("/")
 def read_root():

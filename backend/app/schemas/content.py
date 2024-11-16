@@ -16,3 +16,8 @@ class ContentData(BaseModel):
     notes: Optional[str] = None
     link: Optional[str] = None
     userId: Optional[str] = None
+
+class ContentItem(BaseModel):
+    contentId: str
+    title: str
+    year: int

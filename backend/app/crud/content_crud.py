@@ -20,6 +20,13 @@ def get_years(userId: str):
     years = list({item["year"] for item in response.get("Items", [])})
     return years
 
+def get_year_contents(user_id: str, year: int) -> list[dict]:
+    response = content_table.query(
+        IndexName="YearIndex",
+        KeyConditionExpression=Key("userId").eq(user_id) & Key("year").eq(year)
+    )
+    return response.get("Items", [])
+
 # def get_content(content_id: str):
 #     response = table.get_item(Key={"content_id": content_id})
 #     return response.get("Item")
