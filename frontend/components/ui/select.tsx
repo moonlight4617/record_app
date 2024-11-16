@@ -5,7 +5,8 @@ interface SelectProps {
   children: React.ReactNode;
   name?: string;
   value?: string;
-  onValueChange?: Dispatch<SetStateAction<string>>;
+  onValueChange?: (year: string) => void;
+  // onValueChange?: Dispatch<SetStateAction<string>>;
 }
 
 interface SelectTriggerProps {
@@ -25,11 +26,12 @@ interface SelectValueProps {
   placeholder: string;
 }
 
-export const Select: React.FC<SelectProps> = ({ children, name }) => {
+export const Select: React.FC<SelectProps> = ({ children, name, onValueChange }) => {
   const [selectedValue, setSelectedValue] = useState<string>('');
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedValue(e.target.value);
+    onValueChange ? onValueChange(e.target.value) : null
   };
 
   return (

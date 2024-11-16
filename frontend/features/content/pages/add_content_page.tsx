@@ -30,10 +30,10 @@ export const AddContentPage = () => {
 
   return (
     <Card>
-      <CardHeader>
+      {/* <CardHeader>
         <CardTitle>メモ登録</CardTitle>
         <CardDescription>Record a new movie, book, or blog post you've enjoyed.</CardDescription>
-      </CardHeader>
+      </CardHeader> */}
       <CardContent>
         <form onSubmit={(e) => {
           e.preventDefault()

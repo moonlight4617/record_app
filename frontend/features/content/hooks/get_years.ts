@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 export const useGetYears = () => {
   const [years, setYears] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {

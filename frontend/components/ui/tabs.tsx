@@ -36,9 +36,9 @@ export const TabsList: React.FC<TabsListProps> = ({ children, className }) => {
   return <div className={`flex space-x-4 ${className} bg-gray-200`}>{children}</div>;
 };
 
-export const TabsTrigger: React.FC<{ value: string, children: React.ReactNode, className: string, setTab: Dispatch<SetStateAction<string>> }> = ({ value, children, className, setTab }) => {
+export const TabsTrigger: React.FC<{ value: string, children: React.ReactNode, className?: string, setTab?: Dispatch<SetStateAction<string>> }> = ({ value, children, className, setTab }) => {
   const handleClickTab = () => {
-    setTab(value)
+    setTab ? setTab(value) : null
   }
 
   return <button className={`${className} `}  onClick={() => handleClickTab()} >{children}</button>;
