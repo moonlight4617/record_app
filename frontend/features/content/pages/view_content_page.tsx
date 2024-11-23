@@ -12,6 +12,7 @@ export const ViewContentPage = () => {
   const { years, loading: yearsLoading, error: yearsError } = useGetYears();
   const { fetchYearsContents, loading: contentsLoading, error :contentsError } = useGetYearsContents();
   const [contents, setContents] = useState<ContentDataType[]>([]);
+  const [selectedYear, setSelectedYear] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     if (years.length > 0) {
@@ -41,6 +42,8 @@ export const ViewContentPage = () => {
           <Select
             name="selectedYear"
             onValueChange={fetchContents}
+            value={selectedYear}
+            setValue={setSelectedYear}
           >
             {years.map((year) => (
               <option key={year} value={year}>

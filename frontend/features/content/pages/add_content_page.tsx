@@ -6,14 +6,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label"
 import { Select } from "@/components/ui/select"
 import { useAddContent } from "../hooks/add_content"
-import { ContentType, ContentDataType} from "../types/content_type"
+import { ContentType, ContentDataType, RegisterContentDataType} from "../types/content_type"
 import { toast } from 'react-toastify';
 
 export const AddContentPage = () => {
   const [date, setDate] = useState('');
   const { addContent, loading, error } = useAddContent();
 
-  const handleSubmit = async (content: ContentDataType) => {
+  const handleSubmit = async (content: RegisterContentDataType) => {
     const result = await addContent(content);
     if (result.success) {
       toast.success("記録に成功しました");
