@@ -28,9 +28,21 @@ export type UseAddContentReturn = {
   error: string | null;
 };
 
+export type UseEditContentReturn = {
+  editContent: (content: RegisterContentDataType) => Promise<EditContentResult>;
+  loading: boolean;
+  error: string | null;
+};
+
 export type AddContentResult = {
   success: boolean;
   message?: string;
+};
+
+export type EditContentResult = {
+  success: boolean;
+  message?: string;
+  content?: ContentDataType;
 };
 
 // TODO: 不要そうであれば後ほど削除

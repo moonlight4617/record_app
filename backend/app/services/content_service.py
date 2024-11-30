@@ -1,4 +1,4 @@
-from app.crud.content_crud import add_content, get_years, get_year_contents, get_year_best, update_best, delete_best
+from app.crud.content_crud import add_content, get_years, get_year_contents, get_year_best, update_best, delete_best, update_content
 from app.schemas.content import RegisterContentData, ContentData
 from app.utils import extract_year_from_date
 from typing import List
@@ -9,6 +9,13 @@ async def create_content_service(content_data: RegisterContentData, user_id: str
 
     content_data.userId = user_id
     add_content(content_data)
+
+async def edit_content_service(content_data: RegisterContentData, user_id: str):
+    if content_data.date:
+        content_data.year = extract_year_from_date(content_data.date)
+
+    content_data.userId = user_id
+    return update_content(content_data)
 
 async def update_best_service(contents: List[ContentData], user_id: str):
     if (contents[0].userId != user_id) or (not contents[0].year):

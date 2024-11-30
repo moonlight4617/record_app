@@ -1,6 +1,6 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { InputContentArea } from "@/features/content/components/input_content_area"
-import { useAddContent } from "../hooks/add_content"
+import { useEditContent } from "../hooks/edit_content"
 import { ContentType, ContentDataType, RegisterContentDataType} from "../types/content_type"
 import { toast } from 'react-toastify';
 
@@ -8,18 +8,17 @@ type EditModalProps = {
   content: ContentDataType | null;
   isDisplayModal: boolean;
   setIsDisplayModal: Dispatch<SetStateAction<boolean>>;
+  onUpdate: (updatedContent: ContentDataType) => void
 };
 
-export const EditModal: React.FC<EditModalProps> = ({ content, isDisplayModal, setIsDisplayModal }) => {
-  const [editedContent, setEditedContent] = useState(content);
-  const { addContent, loading, error } = useAddContent();
+export const EditModal: React.FC<EditModalProps> = ({ content, isDisplayModal, setIsDisplayModal, onUpdate }) => {
+  const { editContent, loading, error } = useEditContent();
 
   const handleSubmit = async (content: RegisterContentDataType) => {
-    console.log("content", content)
-    const result = {success: true, message: "成功"}
-    // const result = await addContent(content);
-    if (result.success) {
+    const result = await editContent(content);
+    if (result.success && result.content) {
       toast.success("記録に成功しました");
+      onUpdate(result.content)
     } else {
       toast.error(`記録に失敗しました: ${result.message}`);
     }
@@ -41,6 +40,7 @@ export const EditModal: React.FC<EditModalProps> = ({ content, isDisplayModal, s
           e.preventDefault()
           const formData = new FormData(e.currentTarget)
           handleSubmit({
+            contentId: content.contentId,
             type: formData.get('type') as ContentType,
             title: formData.get('title') as string,
             date: formData.get('date') as string,

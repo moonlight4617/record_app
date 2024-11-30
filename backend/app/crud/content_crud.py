@@ -7,6 +7,34 @@ def add_content(content: RegisterContentData):
     item = content.dict()
     content_table.put_item(Item=item)
 
+def update_content(content: RegisterContentData):
+    response = content_table.update_item(
+        Key = {
+            'contentId': content.contentId,
+            'userId': content.userId
+        },
+        UpdateExpression="SET #ty = :ty, #ti = :ti, #d = :d, #y = :y, #n = :n, #l = :l",
+        ConditionExpression="attribute_exists(userId) AND attribute_exists(contentId)",
+        ExpressionAttributeNames = {
+            "#ty": "type",
+            "#ti": "title",
+            "#d": "date",
+            "#y": "year",
+            "#n": "notes",
+            "#l": "link"
+        },
+        ExpressionAttributeValues={
+            ":ty": content.type,
+            ":ti": content.title,
+            ":d": content.date,
+            ":y": content.year,
+            ":n": content.notes,
+            ":l": content.link
+        },
+        ReturnValues="ALL_NEW"  # 更新後の完全なアイテムを返却
+    )
+    return response.get('Attributes')
+
 def update_best(contents: List[ContentData]):
     for content in contents:
         content_table.update_item(

@@ -77,7 +77,6 @@ export const BestContentPage = () => {
 
   const handleSubmit = async () => {
     if (!editable) return
-    console.log("api実行")
     const result = await updateBest(bestContents);
     if (result.success) {
       setEditable(!editable)

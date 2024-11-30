@@ -26,6 +26,14 @@ export const ViewContentPage = () => {
     setContents(data || []);
   };
 
+  const updateStateContents = (updatedContent: ContentDataType) => {
+    setContents((prevData) =>
+      prevData.map((item) =>
+        item.contentId === updatedContent.contentId ? updatedContent : item
+      )
+    );
+  }
+
   // TODO: 読み込み中、エラー発生時の処理共通化
   // if (yearsLoading || contentsLoading) return <p>Loading...</p>;
   // if (yearsError || contentsError) return <p>Error: {yearsError || contentsError}</p>;
@@ -64,7 +72,7 @@ export const ViewContentPage = () => {
               {contents
                 .filter(c => c.type === type)
                 .map(content => (
-                  <ContentDetail content={content} key={content.contentId} />
+                  <ContentDetail content={content} key={content.contentId} onUpdate={updateStateContents} />
                 ))}
             </ul>
           </div>

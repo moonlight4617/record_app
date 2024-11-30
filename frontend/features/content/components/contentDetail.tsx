@@ -7,9 +7,10 @@ import { EditModal } from "@/features/content/components/modal"
 interface ContentProps {
   content: ContentDataType;
   isRank?: boolean;
+  onUpdate?: (updatedContent: ContentDataType) => void
 }
 
-export const ContentDetail: React.FC<ContentProps>  = ({content, isRank}) => {
+export const ContentDetail: React.FC<ContentProps>  = ({content, isRank, onUpdate}) => {
   const [ isExpanded , setIsExpanded ] = useState<boolean>(false)
   const [ isDisplayModal , setIsDisplayModal ] = useState<boolean>(false)
 
@@ -73,11 +74,12 @@ export const ContentDetail: React.FC<ContentProps>  = ({content, isRank}) => {
             >
               編集
             </button>
-            {isDisplayModal && (
+            {isDisplayModal && onUpdate && (
               <EditModal
                 isDisplayModal={isDisplayModal}
                 setIsDisplayModal={setIsDisplayModal}
                 content={content}
+                onUpdate={onUpdate}
               />
             )}
           </div>
