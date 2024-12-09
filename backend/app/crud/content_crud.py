@@ -3,9 +3,9 @@ from app.db.dynamodb import content_table
 from app.schemas.content import RegisterContentData, ContentData, ContentType
 from typing import List
 
-def add_content(content: RegisterContentData):
+def add_content(content: RegisterContentData, table):
     item = content.dict()
-    content_table.put_item(Item=item)
+    table.put_item(Item=item)
 
 def update_content(content: RegisterContentData):
     response = content_table.update_item(

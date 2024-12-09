@@ -1,14 +1,16 @@
 from app.crud.content_crud import add_content, get_years, get_year_contents, get_year_best, update_best, delete_best, update_content
 from app.schemas.content import RegisterContentData, ContentData
 from app.utils import extract_year_from_date
-from typing import List
+from typing import List, Any
+from app.db.dynamodb import content_table
 
-async def create_content_service(content_data: RegisterContentData, user_id: str):
+
+async def create_content_service(content_data: RegisterContentData, user_id: str, table: Any):
     if content_data.date:
         content_data.year = extract_year_from_date(content_data.date)
 
     content_data.userId = user_id
-    add_content(content_data)
+    add_content(content_data, table)
 
 async def edit_content_service(content_data: RegisterContentData, user_id: str):
     if content_data.date:
