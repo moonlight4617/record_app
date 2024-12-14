@@ -1,11 +1,11 @@
 import pytest
 from fastapi.testclient import TestClient
-from unittest.mock import AsyncMock, MagicMock
-from app.main import app  # FastAPI アプリをインポート
+from unittest.mock import MagicMock
+from app.main import app
 from app.schemas.content import RegisterContentData
 from app.services.depends_service import get_content_table_and_user_id
-from app.services.content_service import create_content_service
 from app.schemas.content import DependsData
+from botocore.exceptions import ClientError
 
 # テスト対象のテーブルとモックデータ
 mock_table = MagicMock()
@@ -30,7 +30,7 @@ client = TestClient(app)
 
 @pytest.mark.asyncio
 async def test_add_content():
-
+    """正常系: 想定通りにDB登録され、返却値が想定通りなことを確認"""
     mock_table.put_item = MagicMock()
 
     # API 呼び出し
@@ -51,3 +51,29 @@ async def test_add_content():
             **mock_content.dict()
         }
     )
+
+@pytest.mark.asyncio
+async def test_content_add_missing_fields():
+    """異常系: 必須フィールドが不足している場合、422エラーが発生"""
+    invalid_content = {
+        "title": "Missing fields"  # 必須フィールドが不足
+    }
+    response = client.post("/content/add", json=invalid_content)
+    assert response.status_code == 422  # バリデーションエラー
+
+@pytest.mark.asyncio
+async def test_content_add_dynamodb_error():
+    """異常系: DynamoDBがエラーをスローした場合、想定している返却値であることを確認"""
+    mock_table.put_item = MagicMock(side_effect=ClientError(
+        error_response={
+            "Error": {
+                "Code": "ProvisionedThroughputExceededException",
+                "Message": "Rate exceeded"
+            }
+        },
+        operation_name="PutItem"
+    ))
+
+    response = client.post("/content/add", json=mock_content.dict())
+    assert response.status_code == 500  # サーバーエラー
+    assert response.json()["detail"] == "An error occurred (ProvisionedThroughputExceededException) when calling the PutItem operation: Rate exceeded"

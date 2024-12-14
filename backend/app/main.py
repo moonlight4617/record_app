@@ -24,7 +24,6 @@ app.include_router(google_callback.router)
 app.include_router(add_content.router)
 app.include_router(get_years.router)
 app.include_router(get_year_contents.router)
-app.include_router(get_year_best.router)
 app.include_router(update_best.router)
 app.include_router(edit_content.router)
 

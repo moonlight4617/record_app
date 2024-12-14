@@ -64,7 +64,7 @@ async def google_callback(code: str, state: str = None):
     # response = JSONResponse(content={"message": "Login successful"})
     # return response
 
-    response = RedirectResponse(url="http://localhost:3000/add-content", status_code=status.HTTP_303_SEE_OTHER)
+    response = RedirectResponse(url="http://localhost:3000/content", status_code=status.HTTP_303_SEE_OTHER)
     response.set_cookie(key="access_token", value=cognito_tokens['access_token'], httponly=True, samesite="Lax")
     response.set_cookie(key="id_token", value=cognito_tokens['id_token'], httponly=True, samesite="Lax")
     return response

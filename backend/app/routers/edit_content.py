@@ -1,18 +1,15 @@
 from fastapi import APIRouter, HTTPException, Depends, Query, Header, status
-from app.services.user_service import get_user_id
 from app.services.content_service import edit_content_service
-from app.schemas.content import RegisterContentData
+from app.schemas.content import RegisterContentData, DependsData
+from app.services.depends_service import get_content_table_and_user_id
 import traceback
 
 router = APIRouter(prefix="/content")
 
-# データベースの代わりに一時的に内容を保存するリストを使用（開発テスト用）
-contents_db = []
-
 @router.post("/edit", tags=["content"])
-async def edit_content(content: RegisterContentData, user_id: str = Depends(get_user_id)):
+async def edit_content(content: RegisterContentData, depends: DependsData = Depends(get_content_table_and_user_id)):
     try:
-        result = await edit_content_service(content, user_id)
+        result = await edit_content_service(content, depends.user_id, depends.table)
         return result
     except Exception as e:
         traceback.print_exc()

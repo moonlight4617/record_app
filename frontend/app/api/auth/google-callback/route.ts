@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
         cookieStore.set('access_token', data.access_token)
         cookieStore.set('refresh_token', data.refresh_token)
 
-        return NextResponse.redirect(new URL('/add-content', request.nextUrl))
+        return NextResponse.redirect(new URL('/content', request.nextUrl))
     } catch (error) {
         return NextResponse.json({ error: error })
     }
