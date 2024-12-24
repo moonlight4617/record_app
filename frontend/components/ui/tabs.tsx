@@ -44,7 +44,7 @@ export const TabsTrigger: React.FC<{ value: string, children: React.ReactNode, c
   return <button className={`${className} `}  onClick={() => handleClickTab()} >{children}</button>;
 };
 
-export const TabsContent: React.FC<TabsContentProps> = ({ value, children, activeTab, isActive }) => {
+export const TabsContent: React.FC<TabsContentProps> = ({ children, isActive }) => {
   // return activeTab === value ? <div>{children}</div> : null;
   return isActive ? <div>{children}</div> : null;
 };
