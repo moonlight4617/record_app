@@ -1,7 +1,7 @@
 import { useState, useEffect  } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Select } from "@/components/ui/select"
 import { useGetYears } from '@/features/content/hooks/get_years';
 import { useGetYearsContents } from '@/features/content/hooks/get_years_contents';
 import { BookOpen, Film, Bookmark } from 'lucide-react'

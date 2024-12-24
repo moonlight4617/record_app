@@ -12,6 +12,8 @@ interface SelectProps {
 
 interface SelectTriggerProps {
   children: React.ReactNode;
+  isOpen: boolean;
+  setIsOpen: Dispatch<SetStateAction<string | undefined>>;
 }
 
 interface SelectContentProps {
@@ -25,6 +27,7 @@ interface SelectItemProps {
 
 interface SelectValueProps {
   placeholder: string;
+  selectedValue: string;
 }
 
 export const Select: React.FC<SelectProps> = ({ children, name, onValueChange, value, setValue }) => {
