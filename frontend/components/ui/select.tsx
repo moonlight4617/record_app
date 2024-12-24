@@ -13,7 +13,7 @@ interface SelectProps {
 interface SelectTriggerProps {
   children: React.ReactNode;
   isOpen: boolean;
-  setIsOpen: Dispatch<SetStateAction<string | undefined>>;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 interface SelectContentProps {

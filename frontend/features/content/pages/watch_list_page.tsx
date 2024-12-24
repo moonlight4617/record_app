@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Select, SelectContent, SelectItem } from "@/components/ui/select"
 import { BookOpen, Film, Bookmark } from 'lucide-react'
 
 type ContentType = 'movie' | 'book' | 'blog'
@@ -42,9 +42,9 @@ export const WatchListPage = () => {
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="type">Type</Label>
               <Select name="type">
-                <SelectTrigger>
+                {/* <SelectTrigger>
                   <SelectValue placeholder="Select content type" />
-                </SelectTrigger>
+                </SelectTrigger> */}
                 <SelectContent>
                   <SelectItem value="movie">Movie</SelectItem>
                   <SelectItem value="book">Book</SelectItem>
