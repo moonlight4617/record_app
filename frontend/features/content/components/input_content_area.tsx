@@ -10,7 +10,7 @@ interface InputContentAreaProps {
 }
 
 export const InputContentArea: React.FC<InputContentAreaProps> = ({content}) => {
-  const [type, setType] = useState<string>('');
+  const [type, setType] = useState<string | undefined>('');
   const [title, setTitle] = useState('');
   const [date, setDate] = useState('');
   const [notes, setNotes] = useState('');
