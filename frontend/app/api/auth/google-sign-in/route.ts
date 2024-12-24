@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from "next/server"
-import crypto from 'crypto'
+import { NextResponse } from "next/server"
+// import crypto from 'crypto'
 
 const {
   NEXT_PUBLIC_COGNITO_DOMAIN,
@@ -8,10 +8,11 @@ const {
   NEXT_PUBLIC_STATE
 } = process.env
 
-export async function GET(request: NextRequest) {
-    let authorizeParams = new URLSearchParams()
+// export async function GET(request: NextRequest) {
+export async function GET() {
+    const authorizeParams = new URLSearchParams()
     // const origin = request.nextUrl.origin
-    const state = crypto.randomBytes(16).toString('hex')
+    // const state = crypto.randomBytes(16).toString('hex')
 
     authorizeParams.append('response_type', 'code')
     authorizeParams.append('client_id', NEXT_PUBLIC_CLIENT_ID as string)

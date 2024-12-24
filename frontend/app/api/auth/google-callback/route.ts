@@ -9,7 +9,7 @@ const {
 
 export async function GET(request: NextRequest) {
     try {
-        const origin = request.nextUrl.origin
+        // const origin = request.nextUrl.origin
         const searchParams = request.nextUrl.searchParams
         const code = searchParams.get('code') as string
 
