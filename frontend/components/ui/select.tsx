@@ -4,8 +4,10 @@ import React from 'react';
 interface SelectProps {
   children: React.ReactNode;
   name?: string;
-  value?: string;
-  onValueChange?: Dispatch<SetStateAction<string>>;
+  value?: string | undefined;
+  setValue? : Dispatch<SetStateAction<string | undefined>>
+  onValueChange?: (year: string) => void;
+  // onValueChange?: Dispatch<SetStateAction<string>>;
 }
 
 interface SelectTriggerProps {
@@ -25,18 +27,19 @@ interface SelectValueProps {
   placeholder: string;
 }
 
-export const Select: React.FC<SelectProps> = ({ children, name }) => {
+export const Select: React.FC<SelectProps> = ({ children, name, onValueChange, value, setValue }) => {
   const [selectedValue, setSelectedValue] = useState<string>('');
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedValue(e.target.value);
+    setValue ? setValue(e.target.value) : setSelectedValue(e.target.value);
+    onValueChange ? onValueChange(e.target.value) : null
   };
 
   return (
     <div className="relative">
       <select
         name={name}
-        value={selectedValue}
+        value={value || selectedValue}
         onChange={handleChange}
         className="border border-gray-300 rounded p-2 w-full text-left"
       >

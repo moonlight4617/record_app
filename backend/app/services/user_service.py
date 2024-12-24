@@ -16,8 +16,8 @@ def get_sub_from_id_token(id_token) -> tuple | None:
         # トークンのヘッダーから`kid`を取得し、該当する公開鍵を取得
         signing_key = jwk_client.get_signing_key_from_jwt(id_token)
 
-        # IDトークンをデコードしてペイロードを取得
-        payload = jwt.decode(id_token, signing_key.key, algorithms=["RS256"], audience=COGNITO_APP_CLIENT_ID)
+        # TODO: IDトークンをデコードしてペイロードを取得。開発環境では微妙に時刻にズレが生じているようなのでleewayで有効期限に余裕を持たせ
+        payload = jwt.decode(id_token, signing_key.key, algorithms=["RS256"], audience=COGNITO_APP_CLIENT_ID, leeway=60)
 
         # ペイロードからsub（ユーザーID）を取得
         user_id = payload.get("sub")

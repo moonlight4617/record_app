@@ -1,19 +1,18 @@
 import { useState } from "react";
-import { ContentDataType, UseAddContentReturn, AddContentResult, RegisterContentDataType } from "../types/content_type"
+import { ContentDataType, UpdateBestResult } from "../types/content_type"
 
-export const useAddContent = (): UseAddContentReturn => {
+export const useUpdateBest = () => {
   const [loading, setLoading] = useState(false);
 
   // TODO: いらなければ後ほど削除
   const [error, setError] = useState<string | null>(null);
 
-  const addContent = async (content: RegisterContentDataType): Promise<AddContentResult> => {
-    content = { ...content, contentId: Date.now().toString() }
+  const updateBest = async (content: ContentDataType[]): Promise<UpdateBestResult> => {
     setLoading(true);
     setError(null);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/content/add`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/content/update-best`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -38,5 +37,5 @@ export const useAddContent = (): UseAddContentReturn => {
     }
   };
 
-  return { addContent, loading, error };
+  return { updateBest, loading, error };
 };

@@ -1,17 +1,37 @@
-from app.crud.content_crud import add_content, get_years
-from app.schemas.content import ContentData
+from app.crud.content_crud import add_content, get_years, get_year_contents, get_year_best, update_best, delete_best, update_content
+from app.schemas.content import RegisterContentData, ContentData
 from app.utils import extract_year_from_date
+from typing import List, Any
+from app.db.dynamodb import content_table
 
-async def create_content_service(content_data: ContentData, user_id: str):
+
+async def create_content_service(content_data: RegisterContentData, user_id: str, table: Any):
     if content_data.date:
         content_data.year = extract_year_from_date(content_data.date)
 
     content_data.userId = user_id
-    add_content(content_data)
+    add_content(content_data, table)
 
-async def get_years_service(userId: str):
-    return get_years(userId)
+async def edit_content_service(content_data: RegisterContentData, user_id: str, table: Any):
+    if content_data.date:
+        content_data.year = extract_year_from_date(content_data.date)
 
+    content_data.userId = user_id
+    return update_content(content_data, table)
 
-# def retrieve_content_service(content_id: str):
-#     return get_content(content_id)
+async def update_best_service(contents: List[ContentData], user_id: str, table: Any):
+    if (contents[0].userId != user_id) or (not contents[0].year):
+        raise
+    ex_best_contents = get_year_best(user_id, contents[0].year, table)
+    # rank属性削除して後に再度rank属性付与
+    delete_best(ex_best_contents, table)
+    update_best(contents, table)
+
+async def get_years_service(userId: str, table: Any):
+    return get_years(userId, table)
+
+def get_year_contents_service(user_id: str, table: Any, year: int) -> list[dict]:
+    return get_year_contents(user_id, table, year)
+
+# def get_year_best_service(user_id: str, year: int) -> list[dict]:
+#     return get_year_best(user_id, year)
