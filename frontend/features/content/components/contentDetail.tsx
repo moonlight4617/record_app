@@ -1,7 +1,7 @@
 import { ContentDataType } from "@/features/content/types/content_type"
 import { BookOpen, Film, Bookmark, LinkIcon, ChevronUp, ChevronDown } from 'lucide-react'
 import { useState } from "react"
-import Image from 'next/image'
+// import Image from 'next/image'
 import { EditModal } from "@/features/content/components/modal"
 
 interface ContentProps {

@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 export const useGetYears = () => {
   const [years, setYears] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchYears = async () => {
@@ -26,7 +26,7 @@ export const useGetYears = () => {
         const data = await response.json();
         setYears(data);
       } catch (err) {
-        setError(err.message);
+        setError((err as Error).message);
       } finally {
         setLoading(false);
       }
