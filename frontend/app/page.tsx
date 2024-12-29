@@ -33,13 +33,6 @@ export default function ContentManager() {
         // TODO: デバッグ用
         redirect: 'manual',
       })
-      .then(response => {
-        if (response.status === 307) {
-          // リダイレクト先のURLを取得
-          console.log(response.headers.get('Location'));
-        }
-      })
-      .catch(error => console.error(error));
 
       // TODO: デバッグ用
         // レスポンスの詳細をログ出力
