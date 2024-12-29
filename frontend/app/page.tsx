@@ -31,6 +31,7 @@ export default function ContentManager() {
         mode: "cors",
         credentials: "include"
       })
+
       // TODO: デバッグ用
         // レスポンスの詳細をログ出力
       console.log('Response status:', result.status);
