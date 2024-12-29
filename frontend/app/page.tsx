@@ -29,9 +29,7 @@ export default function ContentManager() {
           password: password,
         }),
         mode: "cors",
-        credentials: "include",
-        // TODO: デバッグ用
-        redirect: 'manual',
+        credentials: "include"
       })
 
       // TODO: デバッグ用
