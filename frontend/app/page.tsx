@@ -28,7 +28,9 @@ export default function ContentManager() {
           // email: email,
           password: password,
         }),
-        mode: "cors",
+        // TODO: 試し
+        // mode: "cors",
+        mode: "no-cors",
         credentials: "include"
       })
       // TODO: デバッグ用
