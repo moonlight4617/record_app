@@ -18,7 +18,7 @@ export default function ContentManager() {
   const login = async (email: string, password: string) => {
     try {
       setIsSubmitting(true);
-      const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/account/login`, {
+      const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/account/login/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
