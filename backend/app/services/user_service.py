@@ -3,6 +3,9 @@ from app.crud.user_curd import save_user
 from app.schemas.user import User
 import jwt, os
 from jwt import PyJWKClient
+from dotenv import load_dotenv
+
+load_dotenv()
 
 COGNITO_USER_POOL_ID = os.getenv('COGNITO_USER_POOL_ID')
 COGNITO_REGION = os.getenv('AWS_REGION')

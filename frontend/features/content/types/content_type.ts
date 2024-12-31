@@ -56,3 +56,14 @@ export type UpdateBestResult = {
   success: boolean;
   message?: string;
 };
+
+export type UseLogoutReturn = {
+  logout: () => Promise<LogoutResult>;
+  loading: boolean;
+  error: string | null;
+};
+
+export type LogoutResult = {
+  success: boolean;
+  message?: string;
+};

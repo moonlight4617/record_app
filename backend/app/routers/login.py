@@ -12,9 +12,10 @@ router = APIRouter(prefix="/account")
 
 load_dotenv()
 
-# Cognito設定
+# 環境変数
 COGNITO_APP_CLIENT_ID = os.getenv('COGNITO_APP_CLIENT_ID')
 AWS_REGION = os.getenv('AWS_REGION')
+ENVIRONMENT = os.getenv("ENVIRONMENT", "local")
 
 # Boto3クライアント作成
 client = boto3.client('cognito-idp', region_name=AWS_REGION)
@@ -56,11 +57,17 @@ async def login(auth_request: AuthRequest, response: JSONResponse):
             {"message": "Login successful"},
             status_code=status.HTTP_200_OK
         )
-        # response.set_cookie(key="access_token", value=access_token, httponly=True, secure=True, samesite='Lax')  // TODO: 本番ではsecureを指定
-        response.set_cookie(key="access_token", value=access_token, httponly=True, samesite='Lax')
-        response.set_cookie(key="id_token", value=id_token, httponly=True, samesite='Lax')
-        response.set_cookie(key="refresh_token", value=refresh_token, httponly=True, samesite='Lax')
-        response.set_cookie(key="user_id", value=user_id, httponly=True, samesite='Lax')
+
+        if ENVIRONMENT == "production":
+            response.set_cookie(key="access_token", value=access_token, httponly=True, secure=True, samesite='None' )
+            response.set_cookie(key="id_token", value=id_token, httponly=True, secure=True, samesite='None')
+            response.set_cookie(key="refresh_token", value=refresh_token, httponly=True, secure=True, samesite='None')
+            response.set_cookie(key="user_id", value=user_id, httponly=True, secure=True, samesite='None')
+        else:
+            response.set_cookie(key="access_token", value=access_token, httponly=True, samesite='Lax')
+            response.set_cookie(key="id_token", value=id_token, httponly=True, samesite='Lax')
+            response.set_cookie(key="refresh_token", value=refresh_token, httponly=True, samesite='Lax')
+            response.set_cookie(key="user_id", value=user_id, httponly=True, samesite='Lax')
 
         return response
 

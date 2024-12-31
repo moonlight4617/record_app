@@ -6,8 +6,9 @@ import urllib.parse
 import secrets
 import requests, json
 
-load_dotenv()
 router = APIRouter(prefix="/account")
+
+load_dotenv()
 
 CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
 COGNITO_DOMAIN = os.getenv('COGNITO_DOMAIN')
