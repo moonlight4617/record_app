@@ -11,6 +11,14 @@ class ContentType(str, Enum):
     book = "book"
     blog = "blog"
 
+class watchlistData(BaseModel):
+    contentId: str = Field(..., min_length=1)
+    type: ContentType
+    title: str = Field(..., min_length=1)
+    userId: Optional[str] = None
+    link: Optional[str] = None
+    status: str = Field(..., min_length=1)
+
 class RegisterContentData(BaseModel):
     contentId: str = Field(..., min_length=1)
     type: ContentType
@@ -20,6 +28,7 @@ class RegisterContentData(BaseModel):
     notes: Optional[str] = None
     userId: Optional[str] = None
     link: Optional[str] = None
+    status: Optional[str] = None
 
 class ContentData(RegisterContentData):
     rank: Optional[int] = None

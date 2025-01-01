@@ -1,6 +1,9 @@
 import boto3
 import os
 from typing import Any
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # 環境変数からリージョンとテーブル名を取得
 AWS_REGION = os.getenv("AWS_REGION", "ap-northeast-1")

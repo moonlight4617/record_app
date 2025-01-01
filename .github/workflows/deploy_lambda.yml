@@ -1,0 +1,48 @@
+name: Deploy to AWS Lambda
+
+on:
+  push:
+    branches:
+      - main  # mainブランチにpushされたときに実行
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      # - name: Install dependencies
+      #   run: |
+      #     pip install -r backend/requirements.txt
+
+      - name: Zip the Lambda function
+        run: |
+          cd backend
+          # zip -r function.zip .
+          zip -r lambda_function.zip app/ -x "app/tests/*" "app/__pycache__/*" "app/*.pyc" "app/*.pyo" "app/.pytest_cache/*"
+
+      - name: Upload Lambda to S3
+        run: |
+          aws s3 cp lambda_function.zip s3://record-lambda-01/lambda/function.zip
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: "ap-northeast-1"
+
+      - name: Update Lambda function
+        run: |
+          aws lambda update-function-code \
+            --function-name testFunctionPython \
+            --s3-bucket record-lambda-01 \
+            --s3-key lambda/function.zip
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: "ap-northeast-1"

@@ -7,9 +7,10 @@ import { RegisterContentDataType } from "@/features/content/types/content_type"
 
 interface InputContentAreaProps {
   content?: RegisterContentDataType
+  isWatchList? : boolean
 }
 
-export const InputContentArea: React.FC<InputContentAreaProps> = ({content}) => {
+export const InputContentArea: React.FC<InputContentAreaProps> = ({content, isWatchList}) => {
   const [type, setType] = useState<string | undefined>('');
   const [title, setTitle] = useState('');
   const [date, setDate] = useState('');
@@ -51,20 +52,27 @@ export const InputContentArea: React.FC<InputContentAreaProps> = ({content}) => 
           onChange={(e) => setTitle(e.target.value)}
         />
       </div>
-      <div className="flex flex-col space-y-1.5">
-        <Label htmlFor="date">日付</Label>
-        <Input
-          id="date"
-          name="date"
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-        />
-      </div>
-      <div className="flex flex-col space-y-1.5">
-        <Label htmlFor="notes">メモ</Label>
-        <Textarea id="notes" name="notes" placeholder="メモ欄" value={notes} onChange={(e) => setNotes(e.target.value)} />
-      </div>
+      {isWatchList ? (
+        <></>
+      ) : (
+        <>
+          <div className="flex flex-col space-y-1.5">
+            <Label htmlFor="date">日付</Label>
+            <Input
+              id="date"
+              name="date"
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+            />
+          </div>
+          <div className="flex flex-col space-y-1.5">
+            <Label htmlFor="notes">メモ</Label>
+            <Textarea id="notes" name="notes" placeholder="メモ欄" value={notes} onChange={(e) => setNotes(e.target.value)} />
+          </div>
+        </>
+      )}
+
       <div className="flex flex-col space-y-1.5">
         <Label htmlFor="link">リンク</Label>
         <Input id="link" name="link" placeholder="リンク添付する場合は入力" value={link} onChange={(e) => setLink(e.target.value)} />

@@ -7,6 +7,7 @@ export type RegisterContentDataType = {
   date: string
   notes?: string
   link?: string
+  status?: string
 }
 
 export type ContentDataType = {
@@ -19,6 +20,16 @@ export type ContentDataType = {
   year?: number
   rank?: number
   isBest? : boolean
+}
+
+export type WatchlistDataType = {
+  contentId?: string
+  type: ContentType
+  title: string
+  date?: string
+  notes?: string
+  link?: string
+  status?: string
 }
 
 // TODO: 不要そうであれば後ほど削除
@@ -34,6 +45,18 @@ export type UseEditContentReturn = {
   error: string | null;
 };
 
+export type UseAddWatchListReturn = {
+  addWatchlist: (content: WatchlistDataType) => Promise<AddWatchlistResult>;
+  loading: boolean;
+  error: string | null;
+};
+
+export type UseDeleteWatchListReturn = {
+  deleteWatchlist: (content: WatchlistDataType) => Promise<DeleteWatchlistResult>;
+  loading: boolean;
+  error: string | null;
+};
+
 export type AddContentResult = {
   success: boolean;
   message?: string;
@@ -45,6 +68,16 @@ export type EditContentResult = {
   content?: ContentDataType;
 };
 
+export type AddWatchlistResult = {
+  success: boolean;
+  message?: string;
+};
+
+export type DeleteWatchlistResult = {
+  success: boolean;
+  message?: string;
+};
+
 // TODO: 不要そうであれば後ほど削除
 // export type UseUpdateBestReturn = {
 //   updateBest: (content: ContentDataType[]) => Promise<UpdateBestResult>;
@@ -53,6 +86,17 @@ export type EditContentResult = {
 // };
 
 export type UpdateBestResult = {
+  success: boolean;
+  message?: string;
+};
+
+export type UseLogoutReturn = {
+  logout: () => Promise<LogoutResult>;
+  loading: boolean;
+  error: string | null;
+};
+
+export type LogoutResult = {
   success: boolean;
   message?: string;
 };

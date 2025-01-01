@@ -5,8 +5,9 @@ from dotenv import load_dotenv
 import os
 import base64
 
-load_dotenv()
 router = APIRouter(prefix="/account")
+
+load_dotenv()
 
 COGNITO_APP_CLIENT_ID = os.getenv('COGNITO_APP_CLIENT_ID')
 COGNITO_DOMAIN = os.getenv('COGNITO_DOMAIN')

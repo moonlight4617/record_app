@@ -24,11 +24,11 @@ export const ContentDetail: React.FC<ContentProps>  = ({content, isRank, onUpdat
   const getIcon = (type: ContentDataType["type"]) => {
     switch (type) {
       case "movie":
-        return <Film className="w-4 h-4" />
+        return <Film className="w-4 h-4 flex-none" />
       case "book":
-        return <BookOpen className="w-4 h-4" />
+        return <BookOpen className="w-4 h-4 flex-none" />
       case "blog":
-        return <Bookmark className="w-4 h-4" />
+        return <Bookmark className="w-4 h-4 flex-none" />
     }
   }
 
@@ -47,10 +47,10 @@ export const ContentDetail: React.FC<ContentProps>  = ({content, isRank, onUpdat
           className="w-full text-left flex items-center justify-between p-0 cursor-pointer hover:bg-accent hover:text-accent-foreground"
           onClick={toggleExpand}
         >
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 truncate">
             {getIcon(content.type)}
-            <span className="font-medium">{formatDate(content.date)}</span>
-            <span className="truncate">{content.title}</span>
+            <span className="font-medium flex-none">{formatDate(content.date)}</span>
+            <span className="truncate flex-initial">{content.title}</span>
           </div>
           {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </button>
@@ -68,19 +68,23 @@ export const ContentDetail: React.FC<ContentProps>  = ({content, isRank, onUpdat
                 リンク
               </a>
             )}
-            <button
-              onClick={() => handleEdit()}
-              className="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
-            >
-              編集
-            </button>
-            {isDisplayModal && onUpdate && (
-              <EditModal
-                isDisplayModal={isDisplayModal}
-                setIsDisplayModal={setIsDisplayModal}
-                content={content}
-                onUpdate={onUpdate}
-              />
+            {!isRank && (
+              <>
+                <button
+                  onClick={() => handleEdit()}
+                  className="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
+                >
+                  編集
+                </button>
+                {isDisplayModal && onUpdate && (
+                  <EditModal
+                    isDisplayModal={isDisplayModal}
+                    setIsDisplayModal={setIsDisplayModal}
+                    content={content}
+                    onUpdate={onUpdate}
+                  />
+                )}
+              </>
             )}
           </div>
         )}

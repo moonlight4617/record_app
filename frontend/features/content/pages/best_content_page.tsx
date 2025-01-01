@@ -152,11 +152,11 @@ export const BestContentPage = () => {
         ))}
         {editable ? (
           <div className="mt-4">
-            <Button className="" onClick={handleSubmit}>登録</Button>
-            <Button className="" onClick={() => setEditable(!editable)}>キャンセル</Button>
+            <Button className="mr-2" onClick={handleSubmit}>登録</Button>
+            <Button className="bg-gray-300 text-black" onClick={() => setEditable(!editable)}>キャンセル</Button>
           </div>
         ) : (
-          <Button className="ml-auto mt-4" onClick={() => setEditable(!editable)}>編集</Button>
+          <Button className="ml-auto mt-4" onClick={() => setEditable(!editable)}>ベストの編集</Button>
         )}
       </CardContent>
     </Card>

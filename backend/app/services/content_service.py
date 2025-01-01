@@ -1,5 +1,5 @@
-from app.crud.content_crud import add_content, get_years, get_year_contents, get_year_best, update_best, delete_best, update_content
-from app.schemas.content import RegisterContentData, ContentData
+from app.crud.content_crud import add_content, get_years, get_year_contents, get_year_best, update_best, delete_best, update_content, add_watchlist, get_watchlist_contents, delete_watchlist_contents
+from app.schemas.content import RegisterContentData, ContentData, watchlistData
 from app.utils import extract_year_from_date
 from typing import List, Any
 from app.db.dynamodb import content_table
@@ -35,3 +35,16 @@ def get_year_contents_service(user_id: str, table: Any, year: int) -> list[dict]
 
 # def get_year_best_service(user_id: str, year: int) -> list[dict]:
 #     return get_year_best(user_id, year)
+
+async def add_watchlist_service(content: watchlistData, user_id: str, table: Any):
+    content.userId = user_id
+    add_watchlist(content, table)
+
+def get_watchlist_service(user_id: str, table: Any) -> list[dict]:
+    return get_watchlist_contents(user_id, table)
+
+async def delete_watchlist_service(user_id: str, table: Any, content: watchlistData) -> list[dict]:
+    if (content.userId != user_id) or (not content.contentId):
+        raise
+
+    return delete_watchlist_contents(user_id, table, content.contentId)

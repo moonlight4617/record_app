@@ -1,5 +1,5 @@
 from boto3.dynamodb.conditions import Key, Attr
-from app.schemas.content import RegisterContentData, ContentData, ContentType
+from app.schemas.content import RegisterContentData, ContentData, watchlistData
 from typing import List, Any
 
 def add_content(content: RegisterContentData, table: Any):
@@ -12,7 +12,7 @@ def update_content(content: RegisterContentData, table: Any):
             'contentId': content.contentId,
             'userId': content.userId
         },
-        UpdateExpression="SET #ty = :ty, #ti = :ti, #d = :d, #y = :y, #n = :n, #l = :l",
+        UpdateExpression="SET #ty = :ty, #ti = :ti, #d = :d, #y = :y, #n = :n, #l = :l REMOVE #s",
         ConditionExpression="attribute_exists(userId) AND attribute_exists(contentId)",
         ExpressionAttributeNames = {
             "#ty": "type",
@@ -20,7 +20,8 @@ def update_content(content: RegisterContentData, table: Any):
             "#d": "date",
             "#y": "year",
             "#n": "notes",
-            "#l": "link"
+            "#l": "link",
+            "#s": "status"
         },
         ExpressionAttributeValues={
             ":ty": content.type,
@@ -99,3 +100,36 @@ def get_year_best(user_id: str, year: int, table: Any) -> list[dict]:
         FilterExpression =Attr("year").eq(year)
     )
     return response.get("Items", [])
+
+def add_watchlist(content: watchlistData, table: Any):
+    item = content.dict()
+    table.put_item(Item=item)
+
+def get_watchlist_contents(user_id: str, table: Any) -> list[dict]:
+    """
+    ウォッチリストのコンテンツを取得するメソッド。
+
+    :param user_id: ユーザーID
+    :param table: DynamoDBのテーブルオブジェクト
+    :return: ウォッチリストのコンテンツ（リスト形式）
+    """
+    response = table.scan(
+        FilterExpression=Attr("userId").eq(user_id) & Attr("status").eq("to_watch")
+    )
+    return response.get("Items", [])
+
+def delete_watchlist_contents(user_id: str, table: Any, content_id: str):
+    """
+    ウォッチリストのコンテンツを削除するメソッド。
+
+    :param user_id: ユーザーID
+    :param table: DynamoDBのテーブルオブジェクト
+    :param content_id: 削除対象のコンテンツコンテンツID
+    :return: なし
+    """
+    table.delete_item(
+        Key={
+            "contentId": content_id,
+            "userId": user_id
+        }
+    )

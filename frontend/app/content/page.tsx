@@ -8,6 +8,9 @@ import { AddContentPage } from "@/features/content/pages/add_content_page"
 import { ViewContentPage } from "@/features/content/pages/view_content_page"
 import { BestContentPage } from "@/features/content/pages/best_content_page"
 import { WatchListPage } from "@/features/content/pages/watch_list_page"
+import { useLogout } from "@/features/content/hooks/logout"
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/navigation'
 
 type User = {
   id: string
@@ -15,11 +18,23 @@ type User = {
 }
 
 export default function ContentManager() {
+  const router = useRouter();
+
+  // TODO: 不要なようであれば後ほど削除
   const [user, setUser] = useState<User | null>(null)
   const [tab, setTab] = useState("add")
-
-  const logout = () => {
+  
+  const { logout, loading, error } = useLogout();
+  const handleLogout = async () => {
+    console.log("ログアウト開始")
     setUser(null)
+    const result = await logout();
+    if (result.success) {
+      toast.success("ログアウトに成功しました");
+      return router.push('/');
+    } else {
+      toast.error(`ログアウトに失敗しました: ${result.message}`);
+    }
   }
 
   return (
@@ -27,7 +42,7 @@ export default function ContentManager() {
       <div className="container mx-auto bg-white/80 backdrop-blur-sm rounded-lg shadow-lg p-6">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold text-gray-800">Welcome, {user?.name}</h1>
-          <Button variant="ghost" onClick={logout}>
+          <Button variant="ghost" onClick={handleLogout}>
             <LogOut className="mr-2 h-4 w-4" />
             Logout
           </Button>

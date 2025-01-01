@@ -31,17 +31,6 @@ export default function ContentManager() {
         mode: "cors",
         credentials: "include"
       })
-
-      // TODO: デバッグ用
-        // レスポンスの詳細をログ出力
-      console.log('Response status:', result.status);
-      console.log('Response headers:', result.headers);
-      
-      if (result.status === 307) {
-        // リダイレクト先のURLを確認
-        console.log('Redirect location:', result.headers.get('location'));
-      }
-
       if (result.status == 200) {
         toast.success("ログインに成功しました");
         // TODO: URLは定数化

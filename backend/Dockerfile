@@ -6,10 +6,12 @@ WORKDIR /code
 
 # 依存関係をコピー
 COPY ./requirements.txt /code/requirements.txt
+COPY ./requirements-dev.txt /code/requirements-dev.txt
 
 # 依存関係のインストール
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r /code/requirements.txt && \
+    pip install --no-cache-dir -r /code/requirements-dev.txt && \
     apt update && apt install -y zip
 
 # アプリケーションコードをコピー
