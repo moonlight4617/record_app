@@ -5,3 +5,4 @@ layer
 venv
 lambda_function.zip
 layer_package.zip
+.env

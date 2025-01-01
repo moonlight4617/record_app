@@ -1,17 +1,18 @@
 import React, { Dispatch, SetStateAction } from "react";
 import { InputContentArea } from "@/features/content/components/input_content_area"
 import { useEditContent } from "../hooks/edit_content"
-import { ContentType, ContentDataType, RegisterContentDataType} from "../types/content_type"
+import { ContentType, ContentDataType, RegisterContentDataType, WatchlistDataType } from "../types/content_type"
 import { toast } from 'react-toastify';
 
 type EditModalProps = {
-  content: ContentDataType | null;
+  content: ContentDataType | WatchlistDataType | null;
   isDisplayModal: boolean;
+  isWatchllist?: boolean;
   setIsDisplayModal: Dispatch<SetStateAction<boolean>>;
   onUpdate: (updatedContent: ContentDataType) => void
 };
 
-export const EditModal: React.FC<EditModalProps> = ({ content, isDisplayModal, setIsDisplayModal, onUpdate }) => {
+export const EditModal: React.FC<EditModalProps> = ({ content, isDisplayModal, isWatchllist, setIsDisplayModal, onUpdate }) => {
   const { editContent, loading, error } = useEditContent();
 
   const handleSubmit = async (content: RegisterContentDataType) => {
@@ -48,10 +49,10 @@ export const EditModal: React.FC<EditModalProps> = ({ content, isDisplayModal, s
             link: formData.get('link') as string,
           })
         }}>
-          <InputContentArea content={content} />
+          <InputContentArea content={content as RegisterContentDataType} />
           <div className="flex justify-end mt-4">
             <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded mr-4">
-              保存
+              {isWatchllist ? "閲覧済に更新": "保存"}
             </button>
             <button onClick={handleClose} className="mr-2 px-4 py-2 bg-gray-300 rounded">
               キャンセル
