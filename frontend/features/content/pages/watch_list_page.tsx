@@ -102,6 +102,7 @@ export const WatchListPage = () => {
           <InputContentArea isWatchList />
           <Button type="submit" className="mt-4">追加</Button>
         </form>
+        <hr className="my-4 border-gray-400" />
         <h3 className="text-lg font-semibold mb-2">ウォッチリスト</h3>
         <ul className="list-disc pl-5">
           {watchlist.map((item, i) => (

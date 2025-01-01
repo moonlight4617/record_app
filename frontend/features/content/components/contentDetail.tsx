@@ -68,19 +68,23 @@ export const ContentDetail: React.FC<ContentProps>  = ({content, isRank, onUpdat
                 リンク
               </a>
             )}
-            <button
-              onClick={() => handleEdit()}
-              className="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
-            >
-              編集
-            </button>
-            {isDisplayModal && onUpdate && (
-              <EditModal
-                isDisplayModal={isDisplayModal}
-                setIsDisplayModal={setIsDisplayModal}
-                content={content}
-                onUpdate={onUpdate}
-              />
+            {!isRank && (
+              <>
+                <button
+                  onClick={() => handleEdit()}
+                  className="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
+                >
+                  編集
+                </button>
+                {isDisplayModal && onUpdate && (
+                  <EditModal
+                    isDisplayModal={isDisplayModal}
+                    setIsDisplayModal={setIsDisplayModal}
+                    content={content}
+                    onUpdate={onUpdate}
+                  />
+                )}
+              </>
             )}
           </div>
         )}
