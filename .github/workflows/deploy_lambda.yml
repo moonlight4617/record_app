@@ -30,6 +30,7 @@ jobs:
 
       - name: Upload Lambda to S3
         run: |
+          cd backend
           aws s3 cp lambda_function.zip s3://record-lambda-01/lambda/function.zip
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
