@@ -62,8 +62,8 @@ async def test_edit_content(mock_dependencies):  # noqa: F811
             "contentId": mock_content.contentId,
             "userId": mock_user_id,
         },
-        UpdateExpression="SET #ty = :ty, #ti = :ti, #d = :d,\
-            #y = :y, #n = :n, #l = :l REMOVE #s",
+        UpdateExpression="SET #ty = :ty, #ti = :ti, #d = :d, #y = :y, #n = :n,\
+            #l = :l REMOVE #s",
         ConditionExpression="attribute_exists(userId) AND\
             attribute_exists(contentId)",
         ExpressionAttributeNames={
@@ -107,8 +107,7 @@ async def test_content_edit_invalid_content_id(mock_dependencies):  # noqa: E501
     assert response.status_code == 500  # サーバーエラー
     assert (
         response.json()["detail"]
-        == "An error occurred (ConditionalCheckFailedException) when\
-            calling the UpdateItem operation: The conditional request failed"
+        == "An error occurred (ConditionalCheckFailedException) when calling the UpdateItem operation: The conditional request failed"  # noqa: E501
     )
 
 
@@ -142,6 +141,5 @@ async def test_content_edit_dynamodb_error(mock_dependencies):  # noqa: F811
     assert response.status_code == 500  # サーバーエラー
     assert (
         response.json()["detail"]
-        == "An error occurred (ProvisionedThroughputExceededException)\
-            when calling the UpdateItem operation: Rate exceeded"
+        == "An error occurred (ProvisionedThroughputExceededException) when calling the UpdateItem operation: Rate exceeded"  # noqa: E501
     )

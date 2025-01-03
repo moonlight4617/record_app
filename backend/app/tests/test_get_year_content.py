@@ -84,7 +84,7 @@ async def test_get_year_contents_dynamodb_error(mock_dependencies):  # noqa: E50
 
     # 検証
     assert response.status_code == 500  # 内部サーバーエラー
-    assert response.json()["detail"] == "Internal Server Error"
+    assert response.json()["detail"] == "An error occurred (ProvisionedThroughputExceededException) when calling the Query operation: Rate exceeded"  # noqa: E501
 
 
 # 異常系テスト: クエリ結果が空の場合
