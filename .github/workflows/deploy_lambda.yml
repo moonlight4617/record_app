@@ -35,6 +35,8 @@ jobs:
 
       # 単体テスト（pytestの例）
       - name: Run unit tests
+        env:
+          AWS_REGION: ap-northeast-1
         run: |
           pytest backend/app/tests/
 
