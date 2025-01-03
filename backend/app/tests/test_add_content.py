@@ -80,6 +80,5 @@ async def test_content_add_dynamodb_error(mock_dependencies):  # noqa: F811
     assert response.status_code == 500  # サーバーエラー
     assert (
         response.json()["detail"]
-        == "An error occurred (ProvisionedThroughputExceededException)\
-            when calling the PutItem operation: Rate exceeded"
+        == "An error occurred (ProvisionedThroughputExceededException) when calling the PutItem operation: Rate exceeded"  # noqa: E501
     )
