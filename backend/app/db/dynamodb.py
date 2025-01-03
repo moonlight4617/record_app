@@ -17,8 +17,10 @@ dynamodb = boto3.resource("dynamodb", region_name=AWS_REGION)
 content_table = dynamodb.Table(CONTENT_TABLE_NAME)
 user_table = dynamodb.Table(USER_TABLE_NAME)
 
+
 async def get_content_table() -> Any:
-  return dynamodb.Table(CONTENT_TABLE_NAME)
+    return dynamodb.Table(CONTENT_TABLE_NAME)
+
 
 # try:
 #     table.load()

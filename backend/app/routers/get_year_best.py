@@ -10,9 +10,11 @@
 
 # # TODO:不要そうであれば後ほど削除
 # @router.get("/best/year={year}", tags=["content"])
-# async def get_year_best(year: int, user_id: str = Depends(get_user_id)) -> List[dict]:
+# async def get_year_best(year: int, user_id: str = Depends(get_user_id))\
+#  -> List[dict]:
 #     try:
-#         content_items = [ContentData(**item) for item in get_year_best_service(user_id, year)]
+#         content_items = [ContentData(**item) for item\
+#           in get_year_best_service(user_id, year)]
 #         return content_items
 
 #     except Exception as e:

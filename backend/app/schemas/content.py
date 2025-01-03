@@ -2,14 +2,17 @@ from pydantic import BaseModel, Field
 from typing import Optional, Any
 from enum import Enum
 
+
 class DependsData(BaseModel):
     table: Any
     user_id: str
+
 
 class ContentType(str, Enum):
     movie = "movie"
     book = "book"
     blog = "blog"
+
 
 class watchlistData(BaseModel):
     contentId: str = Field(..., min_length=1)
@@ -18,6 +21,7 @@ class watchlistData(BaseModel):
     userId: Optional[str] = None
     link: Optional[str] = None
     status: str = Field(..., min_length=1)
+
 
 class RegisterContentData(BaseModel):
     contentId: str = Field(..., min_length=1)
@@ -30,8 +34,10 @@ class RegisterContentData(BaseModel):
     link: Optional[str] = None
     status: Optional[str] = None
 
+
 class ContentData(RegisterContentData):
     rank: Optional[int] = None
+
 
 class ContentItem(BaseModel):
     contentId: str

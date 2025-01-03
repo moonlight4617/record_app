@@ -1,5 +1,6 @@
 from datetime import datetime
 
+
 def extract_year_from_date(date: str) -> int:
     """
     文字列の日付から年度部分を抽出して整数で返す
