@@ -1,7 +1,21 @@
 # main.py
 from fastapi import FastAPI
 from mangum import Mangum
-from app.routers import users, login, google_login, google_callback, add_content, get_years, get_year_contents, get_year_best, update_best, edit_content, logout, add_watchlist, get_watchlist, delete_watchlist
+from app.routers import (
+    users,
+    login,
+    google_login,
+    google_callback,
+    add_content,
+    get_years,
+    get_year_contents,
+    update_best,
+    edit_content,
+    logout,
+    add_watchlist,
+    get_watchlist,
+    delete_watchlist,
+)
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -31,13 +45,16 @@ app.include_router(add_watchlist.router)
 app.include_router(get_watchlist.router)
 app.include_router(delete_watchlist.router)
 
+
 @app.get("/")
 def read_root():
     return {"message": "Hello from FastAPI on Lambda!"}
 
+
 @app.get("/health")
 def health_check():
     return {"message": "ok"}
+
 
 # Mangum handlerを使用してLambdaに対応
 handler = Mangum(app)

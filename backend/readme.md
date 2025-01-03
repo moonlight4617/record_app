@@ -30,3 +30,13 @@ pip install -r requirements.txt
 - リクエストとレスポンスのデータフォーマット
 - ビジネスロジック（ユースケース）
 - エラーハンドリング
+
+### リンター、フォーマッター
+- flake8
+- black
+- autoflake
+- isort
+
+### フォーマットコマンド
+- autoflake --in-place --remove-all-unused-imports --recursive <該当ディレクトリ> // ディレクトリ配下のファイルの未使用インポートを削除
+- black --line-length 79 <該当ファイル> // 79文字までで改行
