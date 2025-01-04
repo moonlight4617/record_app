@@ -1,7 +1,6 @@
 __pycache__
 .pytest_cache
 lambda_package
-layer
 venv
 lambda_function.zip
 layer_package.zip
