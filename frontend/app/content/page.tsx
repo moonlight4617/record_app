@@ -29,8 +29,8 @@ export default function ContentManager() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-blue-100 to-pink-100 p-4">
-      <div className="container mx-auto bg-white/80 backdrop-blur-sm rounded-lg shadow-lg p-6">
+    <div className="min-h-screen p-4 bg-gray-50">
+      <div className="container mx-auto bg-white backdrop-blur-sm rounded-lg shadow-lg p-6">
         <div className="flex justify-between items-center mb-6">
           <div>
             <h1 className="text-3xl font-bold text-gray-800">ひとことメモ帳。</h1>

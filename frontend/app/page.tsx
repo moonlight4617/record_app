@@ -57,8 +57,8 @@ export default function ContentManager() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-100 to-pink-100">
-      <Card className="w-[350px] bg-white/80 backdrop-blur-sm shadow-lg">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <Card className="w-[350px] bg-white backdrop-blur-sm shadow-lg">
         <CardHeader>
           <CardTitle>ログイン</CardTitle>
         </CardHeader>

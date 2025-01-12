@@ -27,10 +27,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <ToastContainer />
+    <body
+      className={`${geistSans.variable} ${geistMono.variable} antialiased relative`}
+    >
+      <div className="absolute inset-0 bg-[url('/film_image.png')] bg-cover bg-center opacity-60"></div>
+          <ToastContainer />
         {children}
       </body>
     </html>

@@ -23,8 +23,8 @@ export default function ContentManager() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-100 to-pink-100">
-      <Card className="w-[350px] bg-white/80 backdrop-blur-sm shadow-lg">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <Card className="w-[350px] bg-white backdrop-blur-sm shadow-lg">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">認証コードの確認</CardTitle>
           <CardDescription>メールに届いた認証コードを入力して下さい</CardDescription>
