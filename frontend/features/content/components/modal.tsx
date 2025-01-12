@@ -3,6 +3,8 @@ import { InputContentArea } from "@/features/content/components/input_content_ar
 import { useEditContent } from "../hooks/edit_content"
 import { ContentType, ContentDataType, RegisterContentDataType, WatchlistDataType } from "../types/content_type"
 import { toast } from 'react-toastify';
+import { Button } from "@/components/ui/button"
+import { flashMessages } from "@/features/content/constants/flash_messages"
 
 type EditModalProps = {
   content: ContentDataType | WatchlistDataType | null;
@@ -18,10 +20,10 @@ export const EditModal: React.FC<EditModalProps> = ({ content, isDisplayModal, i
   const handleSubmit = async (content: RegisterContentDataType) => {
     const result = await editContent(content);
     if (result.success && result.content) {
-      toast.success("記録に成功しました");
+      toast.success(flashMessages.SUCCESSFUL_NOTE_REGISTRATION);
       onUpdate(result.content)
     } else {
-      toast.error(`記録に失敗しました: ${result.message}`);
+      toast.error(`${flashMessages.FAILED_NOTE_REGISTRATION}: ${result.message}`);
     }
     setIsDisplayModal(!isDisplayModal);
   }
@@ -51,12 +53,12 @@ export const EditModal: React.FC<EditModalProps> = ({ content, isDisplayModal, i
         }}>
           <InputContentArea content={content as RegisterContentDataType} />
           <div className="flex justify-end mt-4">
-            <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded mr-4">
+            <Button type="submit" className="mr-4">
               {isWatchllist ? "閲覧済に更新": "保存"}
-            </button>
-            <button onClick={handleClose} className="mr-2 px-4 py-2 bg-gray-300 rounded">
+            </Button>
+            <Button onClick={handleClose} variant="cancel" className="mr-2">
               キャンセル
-            </button>
+            </Button>
           </div>
         </form>
       </div>

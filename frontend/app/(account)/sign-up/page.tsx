@@ -6,6 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { useRouter } from 'next/navigation'
 import { signUp } from "@/app/hooks/authService"
+import { placeholders } from "@/features/content/constants/placeholders"
+import { flashMessages } from "@/features/content/constants/flash_messages"
+import { toast } from 'react-toastify';
 import Link from "next/link"
 
 export default function ContentManager() {
@@ -13,16 +16,15 @@ export default function ContentManager() {
 
   const handleSignUp = async (email: string, password: string, confirmPassword: string) => {
     try {
-      // TODO: フラッシュメッセージに変更
       if (password !== confirmPassword) {
-        alert('確認用パスワードが違います');
+        toast.error(flashMessages.CONFIRMATION_PASSWORD_INCORRECT);
         return;
       }
 
       const result = await signUp(email, password);
-      result.$metadata.httpStatusCode === 200 ? router.push('/confirm') : console.error("Sign up failed:", result)
+      result.$metadata.httpStatusCode === 200 ? router.push('/confirm') : toast.error(`${flashMessages.FAILED_USER_REGISTRATION}: ${result}`)
     } catch (error) {
-      alert(`Sign up failed: ${error}`);
+      toast.error(`${flashMessages.ERROR_OCCURRED}: ${error}`);
     }
   };
 
@@ -41,15 +43,15 @@ export default function ContentManager() {
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="email">メールアドレス</Label>
-                <Input id="email" name="email" placeholder="Enter your email" />
+                <Input id="email" name="email" placeholder={placeholders.EMAIL} />
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="password">パスワード</Label>
-                <Input id="password" name="password" type="password" placeholder="Enter your password" />
+                <Input id="password" name="password" type="password" placeholder={placeholders.PASSWORD} />
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="confirmPassword">パスワードの確認</Label>
-                <Input id="confirmPassword" name="confirmPassword" type="password" placeholder="Enter your password for confirm" />
+                <Input id="confirmPassword" name="confirmPassword" type="password" placeholder={placeholders.CONFIRMPASSWORD} />
               </div>
             </div>
             <Button type="submit" className="mt-4 w-full">登録</Button>

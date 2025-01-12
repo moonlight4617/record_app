@@ -43,7 +43,6 @@ export const ContentDetail: React.FC<ContentProps>  = ({content, isRank, onUpdat
       {isRank ? content.rank : null}
       <div className="border rounded-lg p-4 transition-all duration-200 ease-in-out w-full">
         <button
-          // variant="ghost"
           className="w-full text-left flex items-center justify-between p-0 cursor-pointer hover:bg-accent hover:text-accent-foreground"
           onClick={toggleExpand}
         >

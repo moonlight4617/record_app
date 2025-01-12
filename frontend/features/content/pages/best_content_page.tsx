@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Select } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
@@ -9,6 +9,8 @@ import { ContentType, ContentDataType } from "@/features/content/types/content_t
 import { ContentDetail } from "@/features/content/components/contentDetail"
 import { useGetYearsContents } from '@/features/content/hooks/get_years_contents';
 import { useUpdateBest } from '@/features/content/hooks/update_best';
+import { typeLabels } from "@/features/content/constants/content_labels"
+import { flashMessages } from "@/features/content/constants/flash_messages"
 import { toast } from 'react-toastify';
 
 export const BestContentPage = () => {
@@ -80,21 +82,17 @@ export const BestContentPage = () => {
     const result = await updateBest(bestContents);
     if (result.success) {
       setEditable(!editable)
-      toast.success("記録に成功しました");
+      toast.success(flashMessages.SUCCESSFUL_BEST_REGISTRATION);
     } else {
-      toast.error(`記録に失敗しました: ${result.message}`);
+      toast.error(`${flashMessages.FAILED_BEST_REGISTRATION}: ${result.message}`);
     }
   }
 
   return (
     <Card>
-      {/* <CardHeader>
-        <CardTitle>Best Content</CardTitle>
-        <CardDescription>View your top 3 picks for each category by year.</CardDescription>
-      </CardHeader> */}
       <CardContent>
         <div className="flex items-center space-x-2 mb-4">
-          <Label htmlFor="year">Select Year:</Label>
+          <Label htmlFor="year">対象年:</Label>
           <Select
             name="selectedYear"
             onValueChange={fetchContents}
@@ -114,7 +112,7 @@ export const BestContentPage = () => {
               {type === 'movie' && <Film className="mr-2 h-5 w-5" />}
               {type === 'book' && <BookOpen className="mr-2 h-5 w-5" />}
               {type === 'blog' && <Bookmark className="mr-2 h-5 w-5" />}
-              Top 3 {type}s
+              {typeLabels[type]} Best3
             </h3>
             <ol className="pl-5">
               {editable ? (
@@ -153,7 +151,7 @@ export const BestContentPage = () => {
         {editable ? (
           <div className="mt-4">
             <Button className="mr-2" onClick={handleSubmit}>登録</Button>
-            <Button className="bg-gray-300 text-black" onClick={() => setEditable(!editable)}>キャンセル</Button>
+            <Button variant="cancel" onClick={() => setEditable(!editable)}>キャンセル</Button>
           </div>
         ) : (
           <Button className="ml-auto mt-4" onClick={() => setEditable(!editable)}>ベストの編集</Button>

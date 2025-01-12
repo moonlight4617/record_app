@@ -7,6 +7,7 @@ import { useGetYearsContents } from '@/features/content/hooks/get_years_contents
 import { BookOpen, Film, Bookmark } from 'lucide-react'
 import { ContentDetail } from "@/features/content/components/contentDetail"
 import { ContentType, ContentDataType } from "@/features/content/types/content_type"
+import { typeLabels } from "@/features/content/constants/content_labels"
 
 export const ViewContentPage = () => {
   const { years, loading: yearsLoading, error: yearsError } = useGetYears();
@@ -46,7 +47,7 @@ export const ViewContentPage = () => {
       </CardHeader> */}
       <CardContent>
         <div className="flex items-center space-x-2 mb-4">
-          <Label htmlFor="year">Select Year:</Label>
+          <Label htmlFor="year">対象年:</Label>
           <Select
             name="selectedYear"
             onValueChange={fetchContents}
@@ -66,7 +67,7 @@ export const ViewContentPage = () => {
               {type === 'movie' && <Film className="mr-2 h-5 w-5" />}
               {type === 'book' && <BookOpen className="mr-2 h-5 w-5" />}
               {type === 'blog' && <Bookmark className="mr-2 h-5 w-5" />}
-              {type}s
+              {typeLabels[type]}
             </h3>
             <ul className="pl-5 list-none">
               {contents

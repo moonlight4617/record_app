@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { BookOpen, Film, Bookmark } from 'lucide-react'
 import { InputContentArea } from "@/features/content/components/input_content_area"
 import { ContentType, WatchlistDataType, ContentDataType } from "@/features/content/types/content_type"
@@ -9,6 +9,7 @@ import { useGetWatchlist } from "@/features/content/hooks/get_watchlist"
 import { useDeleteWatchList } from "@/features/content/hooks/delete_watchlist"
 import { toast } from 'react-toastify';
 import { EditModal } from "@/features/content/components/modal"
+import { flashMessages } from "@/features/content/constants/flash_messages"
 
 export const WatchListPage = () => {
   const [watchlist, setWatchlist] = useState<WatchlistDataType[]>([])
@@ -43,23 +44,23 @@ export const WatchListPage = () => {
   const handleDelete = async (content: WatchlistDataType) => {
     const result = await deleteWatchlist(content);
     if (result.success) {
-      toast.success("ウォッチリスト削除に成功しました");
+      toast.success(flashMessages.SUCCESSFUL_WATCHLIST_DELETION);
       // stateから削除
       setWatchlist((prevWatchlist) =>
         prevWatchlist.filter((item) => item.contentId !== content.contentId) // content.idが一致しないものだけ残す
       );
     } else {
-      toast.error(`ウォッチリスト削除に失敗しました: ${result.message}`);
+      toast.error(`${flashMessages.FAILED_WATCHLIST_DELETION}: ${result.message}`);
     }
   }
 
   const handleSubmit = async (content: WatchlistDataType) => {
     const result = await addWatchlist(content);
     if (result.success) {
-      toast.success("ウォッチリスト追加に成功しました");
+      toast.success(flashMessages.SUCCESSFUL_WATCHLIST_ADDITION);
       setWatchlist([...watchlist, content])
     } else {
-      toast.error(`ウォッチリスト追加に失敗しました: ${result.message}`);
+      toast.error(`${flashMessages.FAILED_WATCHLIST_ADDITION}: ${result.message}`);
     }
   }
 
@@ -85,10 +86,6 @@ export const WatchListPage = () => {
 
   return (
     <Card>
-      {/* <CardHeader>
-        <CardTitle>Watchlist</CardTitle>
-        <CardDescription>Manage your list of content to watch or read later.</CardDescription>
-      </CardHeader> */}
       <CardContent>
         <form onSubmit={(e) => {
           e.preventDefault()
@@ -121,18 +118,18 @@ export const WatchListPage = () => {
                   )}
                 </div>
                 <div className="flex-none text-white">
-                  <button
+                  <Button
                     onClick={() => handleEdit(item)}
-                    className="px-4 py-2 ml-2 bg-blue-500 rounded"
+                    className="ml-2"
                   >
                     閲覧済
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     onClick={() => handleDelete(item)}
-                    className="px-4 py-2 ml-2 bg-red-500 rounded"
+                    className="ml-2 bg-red-500"
                   >
                     削除
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>

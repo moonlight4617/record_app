@@ -4,6 +4,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Select } from "@/components/ui/select"
 import { RegisterContentDataType } from "@/features/content/types/content_type"
+import { placeholders } from "@/features/content/constants/placeholders"
 
 interface InputContentAreaProps {
   content?: RegisterContentDataType
@@ -47,7 +48,7 @@ export const InputContentArea: React.FC<InputContentAreaProps> = ({content, isWa
         <Input
           id="title"
           name="title"
-          placeholder="対象のタイトルを入力"
+          placeholder={placeholders.TITLE}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
@@ -68,14 +69,14 @@ export const InputContentArea: React.FC<InputContentAreaProps> = ({content, isWa
           </div>
           <div className="flex flex-col space-y-1.5">
             <Label htmlFor="notes">メモ</Label>
-            <Textarea id="notes" name="notes" placeholder="メモ欄" value={notes} onChange={(e) => setNotes(e.target.value)} />
+            <Textarea id="notes" name="notes" placeholder={placeholders.NOTES} value={notes} onChange={(e) => setNotes(e.target.value)} />
           </div>
         </>
       )}
 
       <div className="flex flex-col space-y-1.5">
         <Label htmlFor="link">リンク</Label>
-        <Input id="link" name="link" placeholder="リンク添付する場合は入力" value={link} onChange={(e) => setLink(e.target.value)} />
+        <Input id="link" name="link" placeholder={placeholders.LINK} value={link} onChange={(e) => setLink(e.target.value)} />
       </div>
     </div>
   )

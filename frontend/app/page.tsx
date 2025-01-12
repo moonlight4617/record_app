@@ -9,8 +9,9 @@ import { toast } from 'react-toastify';
 import { useState } from "react"
 import Link from "next/link"
 import  { redirectToCognito } from "@/app/hooks/send_google"
+import { placeholders } from "@/features/content/constants/placeholders"
+import { flashMessages } from "@/features/content/constants/flash_messages"
 
-// TODO: 後ほどログインボタンのデザイン、ログイン中の挙動制御
 export default function ContentManager() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false); // ログイン処理中かどうか
@@ -32,16 +33,15 @@ export default function ContentManager() {
         credentials: "include"
       })
       if (result.status == 200) {
-        toast.success("ログインに成功しました");
+        toast.success(flashMessages.SUCCESSFUL_LOGIN);
         // TODO: URLは定数化
         return router.push('/content');
       }
       const resultJson = await result.json();
-      toast.error(`ログイン失敗しました: ${resultJson.detail}`)
+      toast.error(`${flashMessages.FAILED_LOGIN}: ${resultJson.detail}`)
+      setTimeout(() => setIsSubmitting(false), 1000);
     } catch (error) {
-      toast.error(`ログイン失敗しました: ${error}`)
-    }
-     finally {
+      toast.error(`${flashMessages.FAILED_LOGIN}: ${error}`)
       setTimeout(() => setIsSubmitting(false), 1000);
     }
   }
@@ -52,7 +52,7 @@ export default function ContentManager() {
       const returnUrl = await redirectToCognito()
       window.location.href = returnUrl
     } catch (error) {
-      toast.error(`エラーが発生しました: ${error}`)
+      toast.error(`${flashMessages.ERROR_OCCURRED}: ${error}`)
     }
   }
 
@@ -73,16 +73,16 @@ export default function ContentManager() {
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="email">メールアドレス</Label>
-                <Input id="email" name="email" placeholder="Enter your email" />
+                <Input id="email" name="email" placeholder={placeholders.EMAIL} />
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="password">パスワード</Label>
-                <Input id="password" name="password" type="password" placeholder="Enter your password" />
+                <Input id="password" name="password" type="password" placeholder={placeholders.PASSWORD} />
               </div>
             </div>
             {
               isSubmitting ? (
-                <Button disabled type="submit" className="mt-4 w-full !bg-blue-300">Logging in...</Button>
+                <Button disabled type="submit" className="mt-4 w-full !bg-blue-300">ログイン中...</Button>
               ) : (
                 <Button type="submit" className="mt-4 w-full">ログイン</Button>
               )
