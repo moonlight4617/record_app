@@ -20,7 +20,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 origins = [
-    "http://localhost:3000",  # フロントエンドのURLを指定
+    "http://localhost:3000",
+    "https://record-app-moonlight4617s-projects.vercel.app",
 ]
 
 app.add_middleware(
