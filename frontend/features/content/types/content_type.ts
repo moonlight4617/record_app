@@ -1,36 +1,36 @@
-export type ContentType = 'movie' | 'book' | 'blog'
+export type ContentType = "movie" | "book" | "blog";
 
 export type RegisterContentDataType = {
-  contentId?: string
-  type: ContentType
-  title: string
-  date: string
-  notes?: string
-  link?: string
-  status?: string
-}
+  contentId?: string;
+  type: ContentType;
+  title: string;
+  date: string;
+  notes?: string;
+  link?: string;
+  status?: string;
+};
 
 export type ContentDataType = {
-  contentId?: string
-  type: ContentType
-  title: string
-  date: string
-  notes?: string
-  link?: string
-  year?: number
-  rank?: number
-  isBest? : boolean
-}
+  contentId?: string;
+  type: ContentType;
+  title: string;
+  date: string;
+  notes?: string;
+  link?: string;
+  year?: number;
+  rank?: number;
+  isBest?: boolean;
+};
 
 export type WatchlistDataType = {
-  contentId?: string
-  type: ContentType
-  title: string
-  date?: string
-  notes?: string
-  link?: string
-  status?: string
-}
+  contentId?: string;
+  type: ContentType;
+  title: string;
+  date?: string;
+  notes?: string;
+  link?: string;
+  status?: string;
+};
 
 // TODO: 不要そうであれば後ほど削除
 export type UseAddContentReturn = {
@@ -52,7 +52,9 @@ export type UseAddWatchListReturn = {
 };
 
 export type UseDeleteWatchListReturn = {
-  deleteWatchlist: (content: WatchlistDataType) => Promise<DeleteWatchlistResult>;
+  deleteWatchlist: (
+    content: WatchlistDataType
+  ) => Promise<DeleteWatchlistResult>;
   loading: boolean;
   error: string | null;
 };

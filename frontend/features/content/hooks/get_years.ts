@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 export const useGetYears = () => {
   const [years, setYears] = useState([]);
@@ -11,13 +11,16 @@ export const useGetYears = () => {
         setLoading(true);
         setError(null);
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/content/years`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/content/years`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          }
+        );
 
         if (!response.ok) {
           throw new Error(`Error fetching years: ${response.statusText}`);

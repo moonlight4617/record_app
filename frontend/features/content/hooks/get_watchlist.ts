@@ -9,16 +9,21 @@ export const useGetWatchlist = () => {
       setLoading(true);
       setError(null);
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/content/watchlist`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/content/watchlist`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
 
       if (!response.ok) {
-        throw new Error(`Error fetching watchlist contents: ${response.statusText}`);
+        throw new Error(
+          `Error fetching watchlist contents: ${response.statusText}`
+        );
       }
 
       return await response.json();

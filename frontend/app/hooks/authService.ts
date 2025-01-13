@@ -1,7 +1,11 @@
-import { CognitoIdentityProviderClient, SignUpCommand, ConfirmSignUpCommand } from "@aws-sdk/client-cognito-identity-provider";
+import {
+  CognitoIdentityProviderClient,
+  SignUpCommand,
+  ConfirmSignUpCommand,
+} from "@aws-sdk/client-cognito-identity-provider";
 
 export const cognitoClient = new CognitoIdentityProviderClient({
-  region: process.env.NEXT_PUBLIC_REGION
+  region: process.env.NEXT_PUBLIC_REGION,
 });
 
 export const signUp = async (email: string, password: string) => {
