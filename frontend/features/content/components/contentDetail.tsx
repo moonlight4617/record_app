@@ -1,39 +1,53 @@
-import { ContentDataType } from "@/features/content/types/content_type"
-import { BookOpen, Film, Bookmark, LinkIcon, ChevronUp, ChevronDown } from 'lucide-react'
-import { useState } from "react"
+import { ContentDataType } from "@/features/content/types/content_type";
+import {
+  BookOpen,
+  Film,
+  Bookmark,
+  LinkIcon,
+  ChevronUp,
+  ChevronDown,
+} from "lucide-react";
+import { useState } from "react";
 // import Image from 'next/image'
-import { EditModal } from "@/features/content/components/modal"
+import { EditModal } from "@/features/content/components/modal";
 
 interface ContentProps {
   content: ContentDataType;
   isRank?: boolean;
-  onUpdate?: (updatedContent: ContentDataType) => void
+  onUpdate?: (updatedContent: ContentDataType) => void;
 }
 
-export const ContentDetail: React.FC<ContentProps>  = ({content, isRank, onUpdate}) => {
-  const [ isExpanded , setIsExpanded ] = useState<boolean>(false)
-  const [ isDisplayModal , setIsDisplayModal ] = useState<boolean>(false)
+export const ContentDetail: React.FC<ContentProps> = ({
+  content,
+  isRank,
+  onUpdate,
+}) => {
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const [isDisplayModal, setIsDisplayModal] = useState<boolean>(false);
 
-  const toggleExpand = () => setIsExpanded(!isExpanded)
+  const toggleExpand = () => setIsExpanded(!isExpanded);
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    return date.toLocaleDateString("ja-JP", { month: "2-digit", day: "2-digit" })
-  }
+    const date = new Date(dateString);
+    return date.toLocaleDateString("ja-JP", {
+      month: "2-digit",
+      day: "2-digit",
+    });
+  };
 
   const getIcon = (type: ContentDataType["type"]) => {
     switch (type) {
       case "movie":
-        return <Film className="w-4 h-4 flex-none" />
+        return <Film className="w-4 h-4 flex-none" />;
       case "book":
-        return <BookOpen className="w-4 h-4 flex-none" />
+        return <BookOpen className="w-4 h-4 flex-none" />;
       case "blog":
-        return <Bookmark className="w-4 h-4 flex-none" />
+        return <Bookmark className="w-4 h-4 flex-none" />;
     }
-  }
+  };
 
   const handleEdit = () => {
-    setIsDisplayModal(!isDisplayModal)
+    setIsDisplayModal(!isDisplayModal);
   };
 
   // TODO: CSS修正予定　hoverで色付け
@@ -48,10 +62,16 @@ export const ContentDetail: React.FC<ContentProps>  = ({content, isRank, onUpdat
         >
           <div className="flex items-center space-x-2 truncate">
             {getIcon(content.type)}
-            <span className="font-medium flex-none">{formatDate(content.date)}</span>
+            <span className="font-medium flex-none">
+              {formatDate(content.date)}
+            </span>
             <span className="truncate flex-initial">{content.title}</span>
           </div>
-          {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          {isExpanded ? (
+            <ChevronUp className="w-4 h-4" />
+          ) : (
+            <ChevronDown className="w-4 h-4" />
+          )}
         </button>
         {isExpanded && (
           <div className="mt-2 pl-6 space-y-2">
@@ -89,5 +109,5 @@ export const ContentDetail: React.FC<ContentProps>  = ({content, isRank, onUpdat
         )}
       </div>
     </div>
-  )
-}
+  );
+};

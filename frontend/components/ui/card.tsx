@@ -12,9 +12,7 @@ export const Card: React.FC<CardProps> = ({ children, className }) => {
 };
 
 export const CardHeader: React.FC<CardProps> = ({ children }) => (
-  <div className="mb-4">
-    {children}
-  </div>
+  <div className="mb-4">{children}</div>
 );
 
 export const CardTitle: React.FC<CardProps> = ({ className, children }) => (

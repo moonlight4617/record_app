@@ -1,11 +1,11 @@
-import { useState, Dispatch, SetStateAction } from 'react';
-import React from 'react';
+import { useState, Dispatch, SetStateAction } from "react";
+import React from "react";
 
 interface SelectProps {
   children: React.ReactNode;
   name?: string;
   value?: string | undefined;
-  setValue? : Dispatch<SetStateAction<string | undefined>>
+  setValue?: Dispatch<SetStateAction<string | undefined>>;
   onValueChange?: (year: string) => void;
   // onValueChange?: Dispatch<SetStateAction<string>>;
 }
@@ -30,12 +30,18 @@ interface SelectValueProps {
   selectedValue: string;
 }
 
-export const Select: React.FC<SelectProps> = ({ children, name, onValueChange, value, setValue }) => {
-  const [selectedValue, setSelectedValue] = useState<string>('');
+export const Select: React.FC<SelectProps> = ({
+  children,
+  name,
+  onValueChange,
+  value,
+  setValue,
+}) => {
+  const [selectedValue, setSelectedValue] = useState<string>("");
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setValue ? setValue(e.target.value) : setSelectedValue(e.target.value);
-    onValueChange ? onValueChange(e.target.value) : null
+    onValueChange ? onValueChange(e.target.value) : null;
   };
 
   return (
@@ -52,7 +58,11 @@ export const Select: React.FC<SelectProps> = ({ children, name, onValueChange, v
   );
 };
 
-export const SelectTrigger: React.FC<SelectTriggerProps> = ({ children, isOpen, setIsOpen }) => {
+export const SelectTrigger: React.FC<SelectTriggerProps> = ({
+  children,
+  isOpen,
+  setIsOpen,
+}) => {
   return (
     <button
       type="button"
@@ -74,16 +84,16 @@ export const SelectContent: React.FC<SelectContentProps> = ({ children }) => {
 
 export const SelectItem: React.FC<SelectItemProps> = ({ value, children }) => {
   return (
-    <option
-      className="text-gray-700"
-      value={value}
-    >
+    <option className="text-gray-700" value={value}>
       {children}
     </option>
   );
 };
 
-export const SelectValue: React.FC<SelectValueProps> = ({ placeholder, selectedValue }) => {
+export const SelectValue: React.FC<SelectValueProps> = ({
+  placeholder,
+  selectedValue,
+}) => {
   return (
     <span className="text-gray-700">
       {selectedValue ? selectedValue : placeholder}
