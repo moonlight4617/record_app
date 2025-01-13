@@ -41,9 +41,11 @@ export default function ContentManager() {
         return router.push("/content");
       }
       const resultJson = await result.json();
+      // TODO: エラー詳細を削除
       toast.error(`${flashMessages.FAILED_LOGIN}: ${resultJson.detail}`);
       setTimeout(() => setIsSubmitting(false), 1000);
     } catch (error) {
+      // TODO: エラー詳細を削除
       toast.error(`${flashMessages.FAILED_LOGIN}: ${error}`);
       setTimeout(() => setIsSubmitting(false), 1000);
     }
