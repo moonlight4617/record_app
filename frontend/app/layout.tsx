@@ -30,7 +30,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased relative`}
       >
-        <div className="absolute inset-0 bg-[url('/film_image.png')] bg-cover bg-center opacity-60"></div>
+        <div className="absolute inset-0 bg-[url('/film_image.png')] bg-cover bg-center bg-fixed opacity-60"></div>
         <ToastContainer />
         {children}
       </body>
