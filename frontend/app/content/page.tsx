@@ -17,6 +17,7 @@ export default function ContentManager() {
   const router = useRouter();
   const [tab, setTab] = useState("add");
   // TODO: 不要なようであれば後ほど削除
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { logout, loading, error } = useLogout();
   const handleLogout = async () => {
     const result = await logout();
