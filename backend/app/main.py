@@ -22,6 +22,8 @@ app = FastAPI()
 origins = [
     "http://localhost:3000",
     "https://record-app-moonlight4617s-projects.vercel.app",
+    "https://www.memoapp.jp",
+    "https://memoapp.jp",
 ]
 
 app.add_middleware(
