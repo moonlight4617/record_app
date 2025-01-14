@@ -61,54 +61,55 @@ async def login(auth_request: AuthRequest, response: JSONResponse):
             status_code=status.HTTP_200_OK,
         )
 
-        if ENVIRONMENT == "production":
-            response.set_cookie(
-                key="access_token",
-                value=access_token,
-                httponly=True,
-                secure=True,
-                samesite="None",
-            )
-            response.set_cookie(
-                key="id_token",
-                value=id_token,
-                httponly=True,
-                secure=True,
-                samesite="None",
-            )
-            response.set_cookie(
-                key="refresh_token",
-                value=refresh_token,
-                httponly=True,
-                secure=True,
-                samesite="None",
-            )
-            response.set_cookie(
-                key="user_id",
-                value=user_id,
-                httponly=True,
-                secure=True,
-                samesite="None",
-            )
-        else:
-            response.set_cookie(
-                key="access_token",
-                value=access_token,
-                httponly=True,
-                samesite="Lax",
-            )
-            response.set_cookie(
-                key="id_token", value=id_token, httponly=True, samesite="Lax"
-            )
-            response.set_cookie(
-                key="refresh_token",
-                value=refresh_token,
-                httponly=True,
-                samesite="Lax",
-            )
-            response.set_cookie(
-                key="user_id", value=user_id, httponly=True, samesite="Lax"
-            )
+        # ドメイン統一したことによって不要になったコード
+        # if ENVIRONMENT == "production":
+        #     response.set_cookie(
+        #         key="access_token",
+        #         value=access_token,
+        #         httponly=True,
+        #         secure=True,
+        #         samesite="None",
+        #     )
+        #     response.set_cookie(
+        #         key="id_token",
+        #         value=id_token,
+        #         httponly=True,
+        #         secure=True,
+        #         samesite="None",
+        #     )
+        #     response.set_cookie(
+        #         key="refresh_token",
+        #         value=refresh_token,
+        #         httponly=True,
+        #         secure=True,
+        #         samesite="None",
+        #     )
+        #     response.set_cookie(
+        #         key="user_id",
+        #         value=user_id,
+        #         httponly=True,
+        #         secure=True,
+        #         samesite="None",
+        #     )
+        # else:
+        response.set_cookie(
+            key="access_token",
+            value=access_token,
+            httponly=True,
+            samesite="Lax",
+        )
+        response.set_cookie(
+            key="id_token", value=id_token, httponly=True, samesite="Lax"
+        )
+        response.set_cookie(
+            key="refresh_token",
+            value=refresh_token,
+            httponly=True,
+            samesite="Lax",
+        )
+        response.set_cookie(
+            key="user_id", value=user_id, httponly=True, samesite="Lax"
+        )
 
         return response
 
