@@ -6,9 +6,9 @@ export function middleware(req: NextRequest) {
   const accessToken = req.cookies.get("access_token");
 
   // ログインが必要なページへのアクセスを保護
-  // if (pathname.startsWith("/content") && !accessToken) {
-  //   return NextResponse.redirect(new URL("/", req.url));
-  // }
+  if (pathname.startsWith("/content") && !accessToken) {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
 
   // ログイン済みのユーザーがログインページにアクセスした場合はリダイレクト
   if (pathname === "/" && accessToken) {
