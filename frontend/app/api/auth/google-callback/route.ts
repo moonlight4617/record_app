@@ -5,6 +5,7 @@ const {
   NEXT_PUBLIC_COGNITO_DOMAIN,
   NEXT_PUBLIC_CLIENT_ID,
   NEXT_PUBLIC_REDIRECT_URI,
+  DOMAIN,
 } = process.env;
 
 export async function GET(request: NextRequest) {
@@ -46,9 +47,24 @@ export async function GET(request: NextRequest) {
 
     // Store tokens in cookies
     const cookieStore = cookies();
-    cookieStore.set("id_token", data.id_token);
-    cookieStore.set("access_token", data.access_token);
-    cookieStore.set("refresh_token", data.refresh_token);
+    // cookieStore.set("id_token", data.id_token);
+    // cookieStore.set("access_token", data.access_token);
+    // cookieStore.set("refresh_token", data.refresh_token);
+    cookieStore.set({
+      name: "id_token",
+      value: data.id_token,
+      domain: DOMAIN,
+    });
+    cookieStore.set({
+      name: "access_token",
+      value: data.access_token,
+      domain: DOMAIN,
+    });
+    cookieStore.set({
+      name: "refresh_token",
+      value: data.refresh_token,
+      domain: DOMAIN,
+    });
 
     return NextResponse.redirect(new URL("/content", request.nextUrl));
   } catch (error) {
