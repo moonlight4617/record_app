@@ -9,42 +9,41 @@ load_dotenv()
 
 # 環境変数を取得
 ENVIRONMENT = os.getenv("ENVIRONMENT", "local")
+DOMAIN = os.getenv("DOMAIN")
 
 
 @router.post("/logout")
 def logout(response: Response):
     try:
-        # ドメイン統一したことによって不要になったコード
-        # if ENVIRONMENT == "production":
-        #     # TODO: domainは環境変数に移動
-        #     response.delete_cookie(
-        #         key="access_token", domain=".memoapp.jp",
-        #     )
-        #     response.delete_cookie(
-        #         key="id_token", domain=".memoapp.jp",
-        #     )
-        #     response.delete_cookie(
-        #         key="refresh_token", domain=".memoapp.jp",
-        #     )
-        #     response.delete_cookie(
-        #         key="user_id", domain=".memoapp.jp",
-        #     )
-        # else:
-        response.delete_cookie(
-            key="access_token", httponly=True, samesite="Lax", secure=False
-        )
-        response.delete_cookie(
-            key="id_token", httponly=True, samesite="Lax", secure=False
-        )
-        response.delete_cookie(
-            key="refresh_token",
-            httponly=True,
-            samesite="Lax",
-            secure=False,
-        )
-        response.delete_cookie(
-            key="user_id", httponly=True, samesite="Lax", secure=False
-        )
+        if ENVIRONMENT == "production":
+            response.delete_cookie(
+                key="access_token", domain=DOMAIN,
+            )
+            response.delete_cookie(
+                key="id_token", domain=DOMAIN,
+            )
+            response.delete_cookie(
+                key="refresh_token", domain=DOMAIN,
+            )
+            response.delete_cookie(
+                key="user_id", domain=DOMAIN,
+            )
+        else:
+            response.delete_cookie(
+                key="access_token", httponly=True, samesite="Lax", secure=False
+            )
+            response.delete_cookie(
+                key="id_token", httponly=True, samesite="Lax", secure=False
+            )
+            response.delete_cookie(
+                key="refresh_token",
+                httponly=True,
+                samesite="Lax",
+                secure=False,
+            )
+            response.delete_cookie(
+                key="user_id", httponly=True, samesite="Lax", secure=False
+            )
         return {"message": "Successfully logged out"}
     except Exception as e:
         # その他のエラー
