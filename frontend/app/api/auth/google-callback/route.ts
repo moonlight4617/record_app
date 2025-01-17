@@ -54,16 +54,19 @@ export async function GET(request: NextRequest) {
       name: "id_token",
       value: data.id_token,
       domain: DOMAIN,
+      sameSite: "none",
     });
     cookieStore.set({
       name: "access_token",
       value: data.access_token,
       domain: DOMAIN,
+      sameSite: "none",
     });
     cookieStore.set({
       name: "refresh_token",
       value: data.refresh_token,
       domain: DOMAIN,
+      sameSite: "none",
     });
 
     return NextResponse.redirect(new URL("/content", request.nextUrl));
