@@ -50,23 +50,24 @@ export async function GET(request: NextRequest) {
     // cookieStore.set("id_token", data.id_token);
     // cookieStore.set("access_token", data.access_token);
     // cookieStore.set("refresh_token", data.refresh_token);
-    cookieStore.set({
-      name: "id_token",
-      value: data.id_token,
+
+    cookieStore.set("id_token", data.id_token, {
       domain: DOMAIN,
       sameSite: "none",
+      httpOnly: true,
+      secure: true,
     });
-    cookieStore.set({
-      name: "access_token",
-      value: data.access_token,
+    cookieStore.set("access_token", data.access_token, {
       domain: DOMAIN,
       sameSite: "none",
+      httpOnly: true,
+      secure: true,
     });
-    cookieStore.set({
-      name: "refresh_token",
-      value: data.refresh_token,
+    cookieStore.set("refresh_token", data.refresh_token, {
       domain: DOMAIN,
       sameSite: "none",
+      httpOnly: true,
+      secure: true,
     });
 
     return NextResponse.redirect(new URL("/content", request.nextUrl));
