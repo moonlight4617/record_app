@@ -82,8 +82,11 @@ def get_year_contents(user_id: str, table: Any, year: int) -> list[dict]:
         KeyConditionExpression=Key("userId").eq(user_id)
         & Key("year").eq(year),
     )
-    return response.get("Items", [])
+    items = response.get("Items", [])
 
+    # date属性で昇順に並び替え
+    sorted_items = sorted(items, key=lambda x: x.get("date", ""))
+    return sorted_items
 
 # TODO:不要そうであれば後ほど削除
 # def get_year(user_id: str, year: int) -> list[dict]:

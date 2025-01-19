@@ -15,6 +15,7 @@ load_dotenv()
 COGNITO_APP_CLIENT_ID = os.getenv("COGNITO_APP_CLIENT_ID")
 AWS_REGION = os.getenv("AWS_REGION")
 ENVIRONMENT = os.getenv("ENVIRONMENT", "local")
+DOMAIN = os.getenv("DOMAIN")
 
 # Boto3クライアント作成
 client = boto3.client("cognito-idp", region_name=AWS_REGION)
@@ -61,55 +62,58 @@ async def login(auth_request: AuthRequest, response: JSONResponse):
             status_code=status.HTTP_200_OK,
         )
 
-        # ドメイン統一したことによって不要になったコード
-        # if ENVIRONMENT == "production":
-        #     response.set_cookie(
-        #         key="access_token",
-        #         value=access_token,
-        #         httponly=True,
-        #         secure=True,
-        #         samesite="None",
-        #     )
-        #     response.set_cookie(
-        #         key="id_token",
-        #         value=id_token,
-        #         httponly=True,
-        #         secure=True,
-        #         samesite="None",
-        #     )
-        #     response.set_cookie(
-        #         key="refresh_token",
-        #         value=refresh_token,
-        #         httponly=True,
-        #         secure=True,
-        #         samesite="None",
-        #     )
-        #     response.set_cookie(
-        #         key="user_id",
-        #         value=user_id,
-        #         httponly=True,
-        #         secure=True,
-        #         samesite="None",
-        #     )
-        # else:
-        response.set_cookie(
-            key="access_token",
-            value=access_token,
-            httponly=True,
-            samesite="Lax",
-        )
-        response.set_cookie(
-            key="id_token", value=id_token, httponly=True, samesite="Lax"
-        )
-        response.set_cookie(
-            key="refresh_token",
-            value=refresh_token,
-            httponly=True,
-            samesite="Lax",
-        )
-        response.set_cookie(
-            key="user_id", value=user_id, httponly=True, samesite="Lax"
-        )
+        if ENVIRONMENT == "production":
+            response.set_cookie(
+                key="access_token",
+                value=access_token,
+                httponly=True,
+                secure=True,
+                samesite="None",
+                domain=DOMAIN,
+            )
+            response.set_cookie(
+                key="id_token",
+                value=id_token,
+                httponly=True,
+                secure=True,
+                samesite="None",
+                domain=DOMAIN,
+            )
+            response.set_cookie(
+                key="refresh_token",
+                value=refresh_token,
+                httponly=True,
+                secure=True,
+                samesite="None",
+                domain=DOMAIN,
+            )
+            response.set_cookie(
+                key="user_id",
+                value=user_id,
+                httponly=True,
+                secure=True,
+                samesite="None",
+                domain=DOMAIN,
+            )
+        else:
+            response.set_cookie(
+                key="access_token",
+                value=access_token,
+                httponly=True,
+                samesite="Lax",
+            )
+            response.set_cookie(
+                key="id_token", value=id_token, httponly=True, samesite="Lax"
+            )
+            response.set_cookie(
+                key="refresh_token",
+                value=refresh_token,
+                httponly=True,
+                samesite="Lax",
+            )
+            response.set_cookie(
+                key="user_id", value=user_id, httponly=True, samesite="Lax"
+            )
 
         return response
 
