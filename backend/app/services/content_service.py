@@ -9,10 +9,13 @@ from app.crud.content_crud import (
     add_watchlist,
     get_watchlist_contents,
     delete_watchlist_contents,
+    get_recent_contents
 )
 from app.schemas.content import RegisterContentData, ContentData, watchlistData
 from app.utils import extract_year_from_date
 from typing import List, Any
+import boto3
+import json
 
 
 async def create_content_service(
@@ -22,8 +25,10 @@ async def create_content_service(
         content_data.year = extract_year_from_date(content_data.date)
 
     content_data.userId = user_id
-    add_content(content_data, table)
 
+    # TODO: 試し修正。これでうまくいけば更新処理も同様に修正
+    content_data.type_date = content_data.type + "#" + content_data.date
+    add_content(content_data, table)
 
 async def edit_content_service(
     content_data: RegisterContentData, user_id: str, table: Any
@@ -78,3 +83,48 @@ async def delete_watchlist_service(
         raise
 
     return delete_watchlist_contents(user_id, table, content.contentId)
+
+def get_recent_contents_service(
+        user_id: str, table: Any, content_type: str
+) -> list[dict]:
+    return get_recent_contents(user_id, table, content_type)
+
+def generate_recommendations_bedrock(history: List[str]) -> List[str]:
+    # TODO: 一時コミット。後ほど整理
+    """Amazon Bedrockを使ってレコメンドを生成"""
+    client = boto3.client("bedrock-runtime", region_name="ap-northeast-1")
+
+    prompt = f"""
+    私は以下の映画や本を鑑賞・読書しました。
+    {history}
+
+    次に読むべき本や観るべき映画を3つ推薦してください。
+    作品名だけでなく、簡単な説明もつけてください。
+    """
+
+    body = json.dumps({
+        "anthropic_version": "bedrock-2023-05-31",
+        "max_tokens": 300,
+        "temperature": 0.7,
+        "messages": [
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ]
+    })
+
+    response = client.invoke_model(
+        modelId="anthropic.claude-3-haiku-20240307-v1:0",
+        body=body.encode('utf-8')
+    )
+
+    # Bedrockのレスポンスをパース
+    response_body = json.loads(response["body"].read().decode("utf-8"))
+    print("response_body")
+    print(response_body)
+    recommendations = response_body['content'][0]['text'].split("\n")
+    print("recommendations")
+    print(recommendations)
+
+    return recommendations

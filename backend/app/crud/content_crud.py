@@ -136,3 +136,24 @@ def delete_watchlist_contents(user_id: str, table: Any, content_id: str):
     :return: なし
     """
     table.delete_item(Key={"contentId": content_id, "userId": user_id})
+
+def get_recent_contents(user_id: str, table: Any, content_type: str) -> list[dict]:
+    """
+    直近鑑賞したコンテンツを取得するメソッド。
+
+    :param user_id: ユーザーID
+    :param table: DynamoDBのテーブルオブジェクト
+    :param content_type: 対象のコンテンツコンテンツタイプ
+    :return: 直近鑑賞したコンテンツ
+    """
+    response = table.query(
+        IndexName="userId-type-date-index",
+        KeyConditionExpression="userId = :uid AND begins_with(type_date, :type)",
+        ExpressionAttributeValues={
+            ":uid": user_id,
+            ":type": content_type
+        },
+        ScanIndexForward=False,  # 降順（新しい順）
+        Limit=3  # 上位3件
+    )
+    return response.get("Items", [])

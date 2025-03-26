@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { InputContentArea } from "@/features/content/components/input_content_area";
-import { useAddContent } from "../hooks/add_content";
+import { useGetRecommend } from "../hooks/get_recommend";
 import { ContentType, RegisterContentDataType } from "../types/content_type";
 import { toast } from "react-toastify";
 import { flashMessages } from "@/features/content/constants/flash_messages";
@@ -9,7 +9,7 @@ import { useState } from "react";
 import { Bookmark, BookOpen, Film } from "lucide-react";
 
 type Recommendation = {
-  id: string;
+  id?: string; // TODO: 不要であれば削除
   type: ContentType;
   title: string;
   description: string;
@@ -20,8 +20,8 @@ export const RecommendPage = () => {
   const [recommendationType, setRecommendationType] =
     useState<ContentType | null>(null);
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
-  const [showRecommendPopup, setShowRecommendPopup] = useState<boolean>(false);
-  const { addContent, loading, error } = useAddContent();
+  const [showRecommendPopup, setShowRecommendPopup] = useState<boolean>(false); // TODO: 不要であれば削除
+  const { getRecommend, loading, error } = useGetRecommend();
 
   const openRecommendPopup = () => {
     setShowRecommendPopup(true);
@@ -31,7 +31,17 @@ export const RecommendPage = () => {
     setShowRecommendPopup(false);
   };
 
-  const getRecommendations = (type: ContentType) => {
+  const getRecommendations = async (type: ContentType) => {
+    const result = await getRecommend(type);
+
+    console.log("result: ", result);
+
+    const contents = result.contents;
+    if (!contents || contents.length === 0) {
+      toast.info(flashMessages.FAILED_USER_REGISTRATION); // FIXME: 一時的
+      return;
+    }
+
     // Mock recommendations data
     const movieRecommendations: Recommendation[] = [
       {
@@ -94,6 +104,8 @@ export const RecommendPage = () => {
     } else if (type === "book") {
       setRecommendations(bookRecommendations);
     }
+
+    setRecommendations(contents);
 
     // closeRecommendPopup();
   };
