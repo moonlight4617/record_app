@@ -33,8 +33,12 @@ export const useGetRecommend = (): UseGetRecommendReturn => {
       if (!response.ok) {
         throw new Error(`Failed to get recommend: ${response.statusText}`);
       }
-
-      return { success: true };
+      const data = await response.json();
+      console.log("data: ", data);
+      const jsonData = JSON.parse(data?.recommendations);
+      console.log("jsonData: ", jsonData);
+      console.log("jsonData type: ", typeof jsonData);
+      return jsonData?.recommendations;
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "An unknown error occurred";

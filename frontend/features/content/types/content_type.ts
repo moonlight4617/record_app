@@ -33,9 +33,9 @@ export type WatchlistDataType = {
 };
 
 export type RecommendContentsType = {
-  type: ContentType;
+  type?: ContentType;
   title: string;
-  description: string;
+  desc: string;
   link: string;
 };
 
@@ -108,7 +108,7 @@ export type UpdateBestResult = {
 export type GetRecommendResult = {
   success: boolean;
   message?: string;
-  contents?: RecommendContentsType[];
+  recommendations?: RecommendContentsType[];
 };
 
 export type UseLogoutReturn = {

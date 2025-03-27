@@ -89,42 +89,92 @@ def get_recent_contents_service(
 ) -> list[dict]:
     return get_recent_contents(user_id, table, content_type)
 
-def generate_recommendations_bedrock(history: List[str]) -> List[str]:
+def generate_recommendations_bedrock(type : str, history: List[str]) -> List[str]:
     # TODO: 一時コミット。後ほど整理
     """Amazon Bedrockを使ってレコメンドを生成"""
-    client = boto3.client("bedrock-runtime", region_name="ap-northeast-1")
+    try:
 
-    prompt = f"""
-    私は以下の映画や本を鑑賞・読書しました。
-    {history}
+        client = boto3.client("bedrock-runtime", region_name="ap-northeast-1")
 
-    次に読むべき本や観るべき映画を3つ推薦してください。
-    作品名だけでなく、簡単な説明もつけてください。
-    """
+        tool_name = "Recommended_works_to_check_out_next"
+        description = "次にチェックするべきおすすめ作品"
+        tool_definition = {
+            "toolSpec": {
+                "name": tool_name,
+                "description": description,
+                "inputSchema": {
+                    "json": {
+                        "type": "object",
+                        "properties": {
+                            "contents": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "title": {"type": "string"},
+                                        "desc": {"type": "string"},
+                                        "link": {"type": "string"}
+                                    },
+                                    "required": ["title", "desc", "link"]
+                                }
+                            }
+                        },
+                        "required": ["recommendations"]
+                    }
+                },
+            }
+        }
 
-    body = json.dumps({
-        "anthropic_version": "bedrock-2023-05-31",
-        "max_tokens": 300,
-        "temperature": 0.7,
-        "messages": [
+        prompt = f"""
+        <text>
+        私は以下の{"映画を鑑賞" if type == "movie" else "本を読書"}しました。
+        {history}
+
+        {"次に観るべき映画" if type == "movie" else "次に読むべき本"}を3つ推薦してください。
+        各推薦作品について、タイトル、簡潔な説明、作品のリンクを提供してください。
+        リンクは{"www.themoviedb.org/" if type == "movie" else "www.amazon.co.jp/"}のものを提供してください。リンクが見つからない作品に関しては、リンクは空で返却してください。
+        {tool_name} ツールのみを利用すること。
+        </text>
+        """
+
+        messages = [
             {
                 "role": "user",
-                "content": prompt
+                "content": [{"text": prompt}],
             }
         ]
-    })
 
-    response = client.invoke_model(
-        modelId="anthropic.claude-3-haiku-20240307-v1:0",
-        body=body.encode('utf-8')
-    )
+        response = client.converse(
+            modelId="anthropic.claude-3-haiku-20240307-v1:0",
+            messages=messages,
+            toolConfig={
+                "tools": [tool_definition],
+                "toolChoice": {
+                    "tool": {
+                        "name": tool_name,
+                    },
+                },
+            },
+        )
+        print("response")
+        print(response)
 
-    # Bedrockのレスポンスをパース
-    response_body = json.loads(response["body"].read().decode("utf-8"))
-    print("response_body")
-    print(response_body)
-    recommendations = response_body['content'][0]['text'].split("\n")
-    print("recommendations")
-    print(recommendations)
+        response_content = response["output"]["message"]["content"]
 
-    return recommendations
+        # json部を抽出
+        tool_use_args = extract_tool_use_args(response_content)
+        recommendations = json.dumps(tool_use_args, indent=2, ensure_ascii=False)
+        print(recommendations)
+
+        return recommendations
+    except Exception as e:
+        print(f"""Error: {e}""")
+        raise
+
+def extract_tool_use_args(content):
+    """Claude3の返却値からtoolUseのinputを抽出"""
+    for item in content:
+        if "toolUse" in item:
+            return item["toolUse"]["input"]
+    return None
+

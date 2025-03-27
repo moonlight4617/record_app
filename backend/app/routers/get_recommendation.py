@@ -16,13 +16,12 @@ async def get_recommendations(
         """DynamoDBからユーザーの履歴を取得"""
         items = get_recent_contents_service(depends.user_id, depends.table, content_type)
 
-        history = [f"{item['title']} ({item['type']})" for item in items]
-        print("history")
-        print(history)
-        # return history;
+        history = [item['title'] for item in items]
+        type = items[0]['type']
+        # return history
 
         # Bedrockを使ってレコメンドを生成
-        recommendations = generate_recommendations_bedrock(history)
+        recommendations = generate_recommendations_bedrock(type, history)
         return {"recommendations": recommendations}
     except Exception as e:
         traceback.print_exc()
