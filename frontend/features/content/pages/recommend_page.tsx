@@ -32,12 +32,12 @@ export const RecommendPage = () => {
   };
 
   const getRecommendations = async (type: ContentType) => {
-    const contents = await getRecommend(type);
+    const recommendations = await getRecommend(type);
 
-    console.log("contents: ", contents);
+    console.log("recommendations: ", recommendations);
 
-    if (!Array.isArray(contents) || contents.length === 0) {
-      toast.info(flashMessages.FAILED_USER_REGISTRATION); // FIXME: 一時的
+    if (!Array.isArray(recommendations) || recommendations.length === 0) {
+      toast.error(flashMessages.FAILED_GET_RECOMMENDATIONS);
       return;
     }
 
@@ -98,7 +98,7 @@ export const RecommendPage = () => {
     //   setRecommendations(bookRecommendations);
     // }
 
-    setRecommendations(contents);
+    setRecommendations(recommendations);
 
     // closeRecommendPopup();
   };
@@ -133,7 +133,6 @@ export const RecommendPage = () => {
                   <a
                     href={item.link}
                     target="_blank"
-                    // rel="noopener noreferrer"
                     className="text-blue-500 hover:underline flex items-center"
                   >
                     詳細を見る →

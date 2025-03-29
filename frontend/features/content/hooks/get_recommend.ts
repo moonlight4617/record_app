@@ -38,6 +38,7 @@ export const useGetRecommend = (): UseGetRecommendReturn => {
       const jsonData = JSON.parse(data?.recommendations);
       console.log("jsonData: ", jsonData);
       console.log("jsonData type: ", typeof jsonData);
+      console.log("jsonData?.recommendations: ", jsonData?.recommendations);
       return jsonData?.recommendations;
     } catch (err) {
       const message =

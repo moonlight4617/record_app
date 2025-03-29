@@ -106,16 +106,16 @@ def generate_recommendations_bedrock(type : str, history: List[str]) -> List[str
                     "json": {
                         "type": "object",
                         "properties": {
-                            "contents": {
+                            "recommendations": {
                                 "type": "array",
                                 "items": {
                                     "type": "object",
                                     "properties": {
                                         "title": {"type": "string"},
-                                        "desc": {"type": "string"},
-                                        "link": {"type": "string"}
+                                        "desc": {"type": "string"}
+                                        # "link": {"type": "string"}
                                     },
-                                    "required": ["title", "desc", "link"]
+                                    "required": ["title", "desc"]
                                 }
                             }
                         },
@@ -131,11 +131,14 @@ def generate_recommendations_bedrock(type : str, history: List[str]) -> List[str
         {history}
 
         {"次に観るべき映画" if type == "movie" else "次に読むべき本"}を3つ推薦してください。
-        各推薦作品について、タイトル、簡潔な説明、作品のリンクを提供してください。
-        リンクは{"www.themoviedb.org/" if type == "movie" else "www.amazon.co.jp/"}のものを提供してください。リンクが見つからない作品に関しては、リンクは空で返却してください。
+        各作品について、タイトル、簡潔な説明を提供してください。
+        タイトル、説明は日本語で返却してください。
         {tool_name} ツールのみを利用すること。
         </text>
         """
+
+        print("prompt")
+        print(prompt)
 
         messages = [
             {
