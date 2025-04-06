@@ -7,8 +7,6 @@ import {
 
 export const useGetRecommend = (): UseGetRecommendReturn => {
   const [loading, setLoading] = useState(false);
-
-  // TODO: いらなければ後ほど削除
   const [error, setError] = useState<string | null>(null);
 
   const getRecommend = async (
@@ -26,7 +24,6 @@ export const useGetRecommend = (): UseGetRecommendReturn => {
             "Content-Type": "application/json",
           },
           credentials: "include",
-          // body: JSON.stringify(content),
         }
       );
 
