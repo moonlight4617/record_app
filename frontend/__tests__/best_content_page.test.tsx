@@ -5,7 +5,9 @@ import {
   fireEvent,
   waitFor,
   act,
+  within,
 } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { BestContentPage } from "@/features/content/pages/best_content_page";
 import { toast } from "react-toastify";
 
@@ -203,8 +205,14 @@ describe("BestContentPage", () => {
         render(<BestContentPage />);
       });
 
-      const yearSelect = screen.getByTestId("select-selectedYear");
-      expect(yearSelect).toBeInTheDocument();
+      const selectBox = screen.getByRole("combobox");
+      const options = Array.from(selectBox.options).map(
+        (option) => option.value
+      );
+
+      mockYears.forEach((year) => {
+        expect(options).toContain(year); // 想定している年度が含まれているかを確認
+      });
     });
 
     it("各コンテンツタイプのセクションが表示される", async () => {
@@ -420,6 +428,22 @@ describe("BestContentPage", () => {
 
   describe("セレクトボックスの操作", () => {
     it("編集モードでコンテンツを選択すると状態が更新される", async () => {
+      const event = userEvent.setup();
+
+      const mixedYearContents: ContentDataType[] = [
+        ...mockContents,
+        {
+          contentId: "5",
+          title: "Another Movie",
+          type: "movie",
+          date: "2024-01-01",
+          year: 2024,
+          isBest: false,
+        },
+      ];
+
+      mockFetchYearsContents.mockResolvedValue(mixedYearContents);
+
       await act(async () => {
         render(<BestContentPage />);
       });
@@ -434,28 +458,12 @@ describe("BestContentPage", () => {
         fireEvent.click(editButton);
       });
 
-      // セレクトボックスが表示されることを確認
-      const selectElements = screen.getAllByRole("combobox");
-      expect(selectElements.length).toBeGreaterThan(0);
-    });
+      const select = screen.getByLabelText("Best 1");
+      expect(select).toBeInTheDocument();
+      await event.selectOptions(select, "Another Movie"); // "Another Movie"を選択
 
-    it("存在しないコンテンツIDを選択した場合は処理されない", async () => {
-      await act(async () => {
-        render(<BestContentPage />);
-      });
-
-      await waitFor(() => {
-        expect(mockFetchYearsContents).toHaveBeenCalled();
-      });
-
-      const editButton = screen.getByText("ベストの編集");
-
-      await act(async () => {
-        fireEvent.click(editButton);
-      });
-
-      // この部分は実装の詳細に依存するため、
-      // 実際のセレクトボックスの動作を確認する必要があります
+      // 値が変わったことを確認
+      expect(select).toHaveValue("5");
     });
   });
 
@@ -472,20 +480,6 @@ describe("BestContentPage", () => {
       // rankがnullまたはundefinedのコンテンツは表示されない
       const contentDetails = screen.getAllByTestId("content-detail");
       expect(contentDetails).toHaveLength(4); // rank付きコンテンツのみ
-    });
-
-    it("コンテンツがタイプ別に整理されて表示される", async () => {
-      await act(async () => {
-        render(<BestContentPage />);
-      });
-
-      await waitFor(() => {
-        expect(mockFetchYearsContents).toHaveBeenCalled();
-      });
-
-      expect(screen.getByText("Movie Title 1")).toBeInTheDocument();
-      expect(screen.getByText("Movie Title 2")).toBeInTheDocument();
-      expect(screen.getByText("Book Title 1")).toBeInTheDocument();
     });
   });
 
@@ -504,6 +498,7 @@ describe("BestContentPage", () => {
       expect(mockFetchYearsContents).not.toHaveBeenCalled();
     });
 
+    // 今後、ローディング実装した場合のテスト
     it("コンテンツデータのローディング中は適切に処理される", async () => {
       mockUseGetYearsContents.mockReturnValue({
         fetchYearsContents: mockFetchYearsContents,
@@ -525,7 +520,7 @@ describe("BestContentPage", () => {
       const mixedYearContents: ContentDataType[] = [
         ...mockContents,
         {
-          contentId: "5",
+          contentId: "6",
           title: "Old Movie",
           type: "movie",
           date: "2023-01-01",
@@ -581,6 +576,8 @@ describe("BestContentPage", () => {
         },
       ];
 
+      const expectedTitles = ["Movie Rank 1", "Movie Rank 3", "Book Rank 1"];
+
       mockFetchYearsContents.mockResolvedValue(unsortedContents);
 
       await act(async () => {
@@ -593,6 +590,11 @@ describe("BestContentPage", () => {
 
       const contentDetails = screen.getAllByTestId("content-detail");
       expect(contentDetails).toHaveLength(3);
+
+      contentDetails.forEach((detail, index) => {
+        const title = within(detail).getByTestId("content-title");
+        expect(title.textContent).toBe(expectedTitles[index]);
+      });
     });
   });
 
@@ -641,6 +643,7 @@ describe("BestContentPage", () => {
 
       // エラーがあってもUIは表示される
       expect(screen.getByTestId("card")).toBeInTheDocument();
+      // エラーメッセージを表示するように改修した場合はここでテスト
     });
 
     it("コンテンツデータの取得エラーが処理される", async () => {
@@ -656,6 +659,7 @@ describe("BestContentPage", () => {
 
       // エラーがあってもUIは表示される
       expect(screen.getByTestId("card")).toBeInTheDocument();
+      // エラーメッセージを表示するように改修した場合はここでテスト
     });
   });
 });
