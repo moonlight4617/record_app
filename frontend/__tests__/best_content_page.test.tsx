@@ -205,7 +205,7 @@ describe("BestContentPage", () => {
         render(<BestContentPage />);
       });
 
-      const selectBox = screen.getByRole("combobox");
+      const selectBox = screen.getByRole("combobox") as HTMLSelectElement;
       const options = Array.from(selectBox.options).map(
         (option) => option.value
       );
