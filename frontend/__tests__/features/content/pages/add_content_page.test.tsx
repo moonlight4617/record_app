@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { AddContentPage } from "../features/content/pages/add_content_page";
+import { AddContentPage } from "@/features/content/pages/add_content_page";
 import { useAddContent } from "@/features/content/hooks/add_content";
 import { toast } from "react-toastify";
 

@@ -1,5 +1,5 @@
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
-import { ViewContentPage } from "../features/content/pages/view_content_page";
+import { ViewContentPage } from "@/features/content/pages/view_content_page";
 
 jest.mock("@/features/content/hooks/get_years", () => ({
   useGetYears: jest.fn(),
