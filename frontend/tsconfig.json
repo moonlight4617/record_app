@@ -27,7 +27,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "jest.config.ts",
-    "__tests__/*.jsx"
+    "__tests__/*.tsx"
   ],
   "exclude": ["node_modules"]
 }
