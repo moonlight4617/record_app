@@ -71,7 +71,12 @@ export const EditModal: React.FC<EditModalProps> = ({
             <Button type="submit" className="mr-4">
               {isWatchllist ? "閲覧済に更新" : "保存"}
             </Button>
-            <Button onClick={handleClose} variant="cancel" className="mr-2">
+            <Button
+              onClick={handleClose}
+              type="button"
+              variant="cancel"
+              className="mr-2"
+            >
               キャンセル
             </Button>
           </div>
