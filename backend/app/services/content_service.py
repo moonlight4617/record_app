@@ -1,21 +1,15 @@
-from app.crud.content_crud import (
-    add_content,
-    get_years,
-    get_year_contents,
-    get_year_best,
-    update_best,
-    delete_best,
-    update_content,
-    add_watchlist,
-    get_watchlist_contents,
-    delete_watchlist_contents,
-    get_recent_contents
-)
-from app.schemas.content import RegisterContentData, ContentData, watchlistData
-from app.utils import extract_year_from_date
-from typing import List, Any
-import boto3
 import json
+from typing import Any, List
+
+import boto3
+
+from app.crud.content_crud import (add_content, add_watchlist, delete_best,
+                                   delete_watchlist_contents,
+                                   get_recent_contents, get_watchlist_contents,
+                                   get_year_best, get_year_contents, get_years,
+                                   update_best, update_content)
+from app.schemas.content import ContentData, RegisterContentData, watchlistData
+from app.utils import extract_year_from_date
 
 
 async def create_content_service(
@@ -29,6 +23,7 @@ async def create_content_service(
     # TODO: 試し修正。これでうまくいけば更新処理も同様に修正
     content_data.type_date = content_data.type + "#" + content_data.date
     add_content(content_data, table)
+
 
 async def edit_content_service(
     content_data: RegisterContentData, user_id: str, table: Any
@@ -84,12 +79,16 @@ async def delete_watchlist_service(
 
     return delete_watchlist_contents(user_id, table, content.contentId)
 
+
 def get_recent_contents_service(
-        user_id: str, table: Any, content_type: str
+    user_id: str, table: Any, content_type: str
 ) -> list[dict]:
     return get_recent_contents(user_id, table, content_type)
 
-def generate_recommendations_bedrock(type : str, history: List[str]) -> List[str]:
+
+def generate_recommendations_bedrock(
+    type: str, history: List[str]
+) -> List[str]:
     # TODO: 一時コミット。後ほど整理
     """Amazon Bedrockを使ってレコメンドを生成"""
     try:
@@ -112,14 +111,14 @@ def generate_recommendations_bedrock(type : str, history: List[str]) -> List[str
                                     "type": "object",
                                     "properties": {
                                         "title": {"type": "string"},
-                                        "desc": {"type": "string"}
+                                        "desc": {"type": "string"},
                                         # "link": {"type": "string"}
                                     },
-                                    "required": ["title", "desc"]
-                                }
+                                    "required": ["title", "desc"],
+                                },
                             }
                         },
-                        "required": ["recommendations"]
+                        "required": ["recommendations"],
                     }
                 },
             }
@@ -166,7 +165,9 @@ def generate_recommendations_bedrock(type : str, history: List[str]) -> List[str
 
         # json部を抽出
         tool_use_args = extract_tool_use_args(response_content)
-        recommendations = json.dumps(tool_use_args, indent=2, ensure_ascii=False)
+        recommendations = json.dumps(
+            tool_use_args, indent=2, ensure_ascii=False
+        )
         print(recommendations)
 
         return recommendations
@@ -174,10 +175,10 @@ def generate_recommendations_bedrock(type : str, history: List[str]) -> List[str
         print(f"""Error: {e}""")
         raise
 
+
 def extract_tool_use_args(content):
     """Claude3の返却値からtoolUseのinputを抽出"""
     for item in content:
         if "toolUse" in item:
             return item["toolUse"]["input"]
     return None
-

@@ -1,6 +1,8 @@
-from boto3.dynamodb.conditions import Key, Attr
-from app.schemas.content import RegisterContentData, ContentData, watchlistData
-from typing import List, Any
+from typing import Any, List
+
+from boto3.dynamodb.conditions import Attr, Key
+
+from app.schemas.content import ContentData, RegisterContentData, watchlistData
 
 
 def add_content(content: RegisterContentData, table: Any):
@@ -88,6 +90,7 @@ def get_year_contents(user_id: str, table: Any, year: int) -> list[dict]:
     sorted_items = sorted(items, key=lambda x: x.get("date", ""))
     return sorted_items
 
+
 # TODO:不要そうであれば後ほど削除
 # def get_year(user_id: str, year: int) -> list[dict]:
 #     response = content_table.query(
@@ -137,7 +140,10 @@ def delete_watchlist_contents(user_id: str, table: Any, content_id: str):
     """
     table.delete_item(Key={"contentId": content_id, "userId": user_id})
 
-def get_recent_contents(user_id: str, table: Any, content_type: str) -> list[dict]:
+
+def get_recent_contents(
+    user_id: str, table: Any, content_type: str
+) -> list[dict]:
     """
     直近鑑賞したコンテンツを取得するメソッド。
 
@@ -148,12 +154,9 @@ def get_recent_contents(user_id: str, table: Any, content_type: str) -> list[dic
     """
     response = table.query(
         IndexName="userId-type-date-index",
-        KeyConditionExpression="userId = :uid AND begins_with(type_date, :type)",
-        ExpressionAttributeValues={
-            ":uid": user_id,
-            ":type": content_type
-        },
+        KeyConditionExpression="userId = :uid AND begins_with(type_date, :type)",   # noqa: E501
+        ExpressionAttributeValues={":uid": user_id, ":type": content_type},
         ScanIndexForward=False,  # 降順（新しい順）
-        Limit=3  # 上位3件
+        Limit=3,  # 上位3件
     )
     return response.get("Items", [])

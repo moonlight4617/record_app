@@ -1,8 +1,9 @@
+import os
+
 import requests
+from dotenv import load_dotenv
 from fastapi import APIRouter, HTTPException, status
 from fastapi.responses import RedirectResponse
-from dotenv import load_dotenv
-import os
 
 router = APIRouter(prefix="/account")
 

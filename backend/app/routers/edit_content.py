@@ -1,8 +1,10 @@
-from fastapi import APIRouter, HTTPException, Depends
-from app.services.content_service import edit_content_service
-from app.schemas.content import RegisterContentData, DependsData
-from app.services.depends_service import get_content_table_and_user_id
 import traceback
+
+from fastapi import APIRouter, Depends, HTTPException
+
+from app.schemas.content import DependsData, RegisterContentData
+from app.services.content_service import edit_content_service
+from app.services.depends_service import get_content_table_and_user_id
 
 router = APIRouter(prefix="/content")
 

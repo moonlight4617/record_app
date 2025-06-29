@@ -1,6 +1,7 @@
-from fastapi.testclient import TestClient
-from app.main import app
 from boto3.dynamodb.conditions import Key
+from fastapi.testclient import TestClient
+
+from app.main import app
 from app.tests.conftest import mock_dependencies  # noqa: F401
 
 # テスト用のクライアント
