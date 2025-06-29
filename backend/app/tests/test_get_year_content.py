@@ -43,7 +43,7 @@ expected_response = [
         "contentId": "2",
         "type": "book",
         "title": "Title 2",
-        "date": "2024-08-15", 
+        "date": "2024-08-15",
         "type_date": None,
         "year": 2024,
         "notes": "Note 2",
@@ -54,7 +54,7 @@ expected_response = [
     },
     {
         "contentId": "1",
-        "type": "movie", 
+        "type": "movie",
         "title": "Title 1",
         "date": "2024-11-10",
         "type_date": None,

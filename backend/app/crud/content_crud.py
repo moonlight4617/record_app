@@ -154,7 +154,7 @@ def get_recent_contents(
     """
     response = table.query(
         IndexName="userId-type-date-index",
-        KeyConditionExpression="userId = :uid AND begins_with(type_date, :type)",   # noqa: E501
+        KeyConditionExpression="userId = :uid AND begins_with(type_date, :type)",  # noqa: E501
         ExpressionAttributeValues={":uid": user_id, ":type": content_type},
         ScanIndexForward=False,  # 降順（新しい順）
         Limit=3,  # 上位3件
