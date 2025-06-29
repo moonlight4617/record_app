@@ -7,7 +7,6 @@ class DependsData(BaseModel):
     table: Any
     user_id: str
 
-
 class ContentType(str, Enum):
     movie = "movie"
     book = "book"
@@ -28,6 +27,7 @@ class RegisterContentData(BaseModel):
     type: ContentType
     title: str = Field(..., min_length=1)
     date: str
+    type_date: Optional[str] = None
     year: Optional[int] = None
     notes: Optional[str] = None
     userId: Optional[str] = None

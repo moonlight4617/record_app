@@ -13,7 +13,7 @@ interface TabsListProps {
 }
 
 interface TabsContentProps {
-  value: string;
+  value?: string;
   children: React.ReactNode;
   activeTab?: string;
   isActive?: boolean;

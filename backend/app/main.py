@@ -15,6 +15,7 @@ from app.routers import (
     add_watchlist,
     get_watchlist,
     delete_watchlist,
+    get_recommendation
 )
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -47,6 +48,7 @@ app.include_router(logout.router)
 app.include_router(add_watchlist.router)
 app.include_router(get_watchlist.router)
 app.include_router(delete_watchlist.router)
+app.include_router(get_recommendation.router)
 
 
 @app.get("/")
