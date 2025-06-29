@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 export const useGetYears = () => {
-  const [years, setYears] = useState([]);
+  const [years, setYears] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

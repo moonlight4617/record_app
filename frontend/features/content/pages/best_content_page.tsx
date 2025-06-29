@@ -140,8 +140,9 @@ export const BestContentPage = () => {
               {editable ? (
                 [...Array(3)].map((_, i) => (
                   <div key={i} className="flex">
-                    <label>{`Best ${i + 1}`}</label>
+                    <label htmlFor={`best${i + 1}`}>{`Best ${i + 1}`}</label>
                     <select
+                      id={`best${i + 1}`}
                       name={`best${i + 1}`}
                       onChange={(e) =>
                         handleSelectChange(type, i + 1, e.target.value)

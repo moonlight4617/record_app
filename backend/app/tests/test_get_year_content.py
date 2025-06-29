@@ -1,9 +1,11 @@
-import pytest
-from fastapi.testclient import TestClient
 from unittest.mock import MagicMock
-from app.main import app
-from botocore.exceptions import ClientError
+
+import pytest
 from boto3.dynamodb.conditions import Key
+from botocore.exceptions import ClientError
+from fastapi.testclient import TestClient
+
+from app.main import app
 from app.tests.conftest import mock_dependencies, mock_user_id  # noqa: F401
 
 # モックデータと設定
@@ -35,6 +37,36 @@ mock_content_items = [
     },
 ]
 
+# APIレスポンスで期待される形式（type_dateフィールドと順序を考慮）
+expected_response = [
+    {
+        "contentId": "2",
+        "type": "book",
+        "title": "Title 2",
+        "date": "2024-08-15",
+        "type_date": None,
+        "year": 2024,
+        "notes": "Note 2",
+        "userId": mock_user_id,
+        "link": "https://example2.com",
+        "status": None,
+        "rank": None,
+    },
+    {
+        "contentId": "1",
+        "type": "movie",
+        "title": "Title 1",
+        "date": "2024-11-10",
+        "type_date": None,
+        "year": 2024,
+        "notes": "Note 1",
+        "userId": mock_user_id,
+        "link": "https://example1.com",
+        "status": None,
+        "rank": None,
+    },
+]
+
 client = TestClient(app)
 
 
@@ -49,7 +81,7 @@ async def test_get_year_contents_success(mock_dependencies):  # noqa: F811
 
     # レスポンスのアサーション
     assert response.status_code == 200
-    assert response.json() == mock_content_items
+    assert response.json() == expected_response
 
     # 実際の KeyConditionExpression を作成
     expected_key_condition = Key("userId").eq("test_user") & Key("year").eq(
@@ -65,7 +97,9 @@ async def test_get_year_contents_success(mock_dependencies):  # noqa: F811
 
 # 異常系テスト: DynamoDBクエリ失敗
 @pytest.mark.asyncio
-async def test_get_year_contents_dynamodb_error(mock_dependencies):  # noqa: E501,F811
+async def test_get_year_contents_dynamodb_error(
+    mock_dependencies,  # noqa: F811
+):
     """異常系: DynamoDBがエラーをスローした場合の返却値が想定通り"""
     mock_table = mock_dependencies
     mock_table.query = MagicMock(
@@ -84,7 +118,10 @@ async def test_get_year_contents_dynamodb_error(mock_dependencies):  # noqa: E50
 
     # 検証
     assert response.status_code == 500  # 内部サーバーエラー
-    assert response.json()["detail"] == "An error occurred (ProvisionedThroughputExceededException) when calling the Query operation: Rate exceeded"  # noqa: E501
+    assert (
+        response.json()["detail"]
+        == "An error occurred (ProvisionedThroughputExceededException) when calling the Query operation: Rate exceeded"  # noqa: E501
+    )
 
 
 # 異常系テスト: クエリ結果が空の場合

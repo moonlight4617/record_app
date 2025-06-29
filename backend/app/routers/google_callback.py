@@ -1,8 +1,9 @@
+import os
+
 import requests
+from dotenv import load_dotenv
 from fastapi import APIRouter, HTTPException, status
 from fastapi.responses import RedirectResponse
-from dotenv import load_dotenv
-import os
 
 router = APIRouter(prefix="/account")
 
@@ -30,8 +31,7 @@ async def google_callback(code: str, state: str = None):
         data={
             "grant_type": "authorization_code",
             "client_id": COGNITO_APP_CLIENT_ID,
-            "redirect_uri":
-                "http://localhost:8000/account/auth/google/callback",
+            "redirect_uri": "http://localhost:8000/account/auth/google/callback",  # noqa: E501
             "code": code,
         },
         headers={

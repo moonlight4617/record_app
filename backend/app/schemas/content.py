@@ -1,6 +1,7 @@
-from pydantic import BaseModel, Field
-from typing import Optional, Any
 from enum import Enum
+from typing import Any, Optional
+
+from pydantic import BaseModel, Field
 
 
 class DependsData(BaseModel):
@@ -28,6 +29,7 @@ class RegisterContentData(BaseModel):
     type: ContentType
     title: str = Field(..., min_length=1)
     date: str
+    type_date: Optional[str] = None
     year: Optional[int] = None
     notes: Optional[str] = None
     userId: Optional[str] = None

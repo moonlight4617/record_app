@@ -1,11 +1,12 @@
 import os
-from dotenv import load_dotenv
-from fastapi import HTTPException, APIRouter, status
-from pydantic import BaseModel
-import boto3
-from fastapi.responses import JSONResponse
-from app.services.user_service import get_sub_from_id_token
 
+import boto3
+from dotenv import load_dotenv
+from fastapi import APIRouter, HTTPException, status
+from fastapi.responses import JSONResponse
+from pydantic import BaseModel
+
+from app.services.user_service import get_sub_from_id_token
 
 router = APIRouter(prefix="/account")
 

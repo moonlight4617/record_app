@@ -1,9 +1,10 @@
+import os
+import secrets
+import urllib.parse
+
+from dotenv import load_dotenv
 from fastapi import APIRouter
 from fastapi.responses import RedirectResponse
-from dotenv import load_dotenv
-import os
-import urllib.parse
-import secrets
 
 router = APIRouter(prefix="/account")
 

@@ -1,8 +1,10 @@
-from fastapi.testclient import TestClient
 from unittest.mock import MagicMock
+
+from boto3.dynamodb.conditions import Attr, Key
+from fastapi.testclient import TestClient
+
 from app.main import app
 from app.schemas.content import ContentData
-from boto3.dynamodb.conditions import Key, Attr
 from app.tests.conftest import mock_dependencies, mock_user_id  # noqa: F401
 
 # テスト用クライアント

@@ -16,4 +16,5 @@ export const flashMessages = {
   FAILED_WATCHLIST_DELETION: "ウォッチリスト削除に失敗しました",
   SUCCESSFUL_WATCHLIST_ADDITION: "ウォッチリスト追加しました",
   FAILED_WATCHLIST_ADDITION: "ウォッチリスト追加に失敗しました",
+  FAILED_GET_RECOMMENDATIONS: "おススメ作品の取得に失敗しました",
 };

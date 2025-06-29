@@ -32,6 +32,13 @@ export type WatchlistDataType = {
   status?: string;
 };
 
+export type RecommendContentsType = {
+  type?: ContentType;
+  title: string;
+  desc: string;
+  link: string;
+};
+
 // TODO: 不要そうであれば後ほど削除
 export type UseAddContentReturn = {
   addContent: (content: RegisterContentDataType) => Promise<AddContentResult>;
@@ -55,6 +62,12 @@ export type UseDeleteWatchListReturn = {
   deleteWatchlist: (
     content: WatchlistDataType
   ) => Promise<DeleteWatchlistResult>;
+  loading: boolean;
+  error: string | null;
+};
+
+export type UseGetRecommendReturn = {
+  getRecommend: (content_type: ContentType) => Promise<GetRecommendResult>;
   loading: boolean;
   error: string | null;
 };
@@ -90,6 +103,12 @@ export type DeleteWatchlistResult = {
 export type UpdateBestResult = {
   success: boolean;
   message?: string;
+};
+
+export type GetRecommendResult = {
+  success: boolean;
+  message?: string;
+  recommendations?: RecommendContentsType[];
 };
 
 export type UseLogoutReturn = {

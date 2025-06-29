@@ -1,9 +1,11 @@
-import pytest
-from fastapi.testclient import TestClient
 from unittest.mock import MagicMock
-from app.main import app
-from app.schemas.content import RegisterContentData
+
+import pytest
 from botocore.exceptions import ClientError
+from fastapi.testclient import TestClient
+
+from app.main import app
+from app.schemas.content import ContentType, RegisterContentData
 from app.tests.conftest import mock_dependencies, mock_user_id  # noqa: F401
 
 # モック用データ
@@ -36,7 +38,22 @@ async def test_add_content(mock_dependencies):  # noqa: F811
     # DynamoDB テーブルに正しいデータが渡されたか確認
     mock_content.userId = mock_user_id  # userIdはserviceで付与される
     mock_content.year = 2024  # yearはserviceで付与される
-    mock_table.put_item.assert_called_once_with(Item={**mock_content.dict()})
+
+    # 期待される呼び出し内容
+    expected_content = {
+        "contentId": "test_id",
+        "type": ContentType.movie,  # ContentTypeのenumオブジェクト
+        "title": "Test Title",
+        "date": "2024-11-10",
+        "type_date": "movie#2024-11-10",  # 自動生成される
+        "year": 2024,
+        "notes": "Test note",
+        "userId": mock_user_id,
+        "link": "https://example.com",
+        "status": None,
+    }
+
+    mock_table.put_item.assert_called_once_with(Item=expected_content)
 
 
 @pytest.mark.asyncio

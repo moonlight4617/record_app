@@ -8,6 +8,7 @@ import { AddContentPage } from "@/features/content/pages/add_content_page";
 import { ViewContentPage } from "@/features/content/pages/view_content_page";
 import { BestContentPage } from "@/features/content/pages/best_content_page";
 import { WatchListPage } from "@/features/content/pages/watch_list_page";
+import { RecommendPage } from "@/features/content/pages/recommend_page";
 import { useLogout } from "@/features/content/hooks/logout";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
@@ -51,7 +52,7 @@ export default function ContentManager() {
           </Button>
         </div>
         <Tabs defaultValue="add" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-4 gap-4 bg-gray-200 p-1">
+          <TabsList className="grid w-full grid-cols-5 gap-4 bg-gray-200 p-1">
             <TabsTrigger
               value="add"
               setTab={setTab}
@@ -84,6 +85,14 @@ export default function ContentManager() {
               <Bookmark className="mr-2 h-4 w-4" />
               ウォッチリスト
             </TabsTrigger>
+            <TabsTrigger
+              value="recommend"
+              setTab={setTab}
+              className={`flex items-center justify-center ${tab == "recommend" ? "bg-white" : null}`}
+            >
+              <Bookmark className="mr-2 h-4 w-4" />
+              おススメ
+            </TabsTrigger>
           </TabsList>
           <TabsContent value="add" activeTab={tab} isActive={tab == "add"}>
             <AddContentPage />
@@ -100,6 +109,13 @@ export default function ContentManager() {
             isActive={tab == "watchlist"}
           >
             <WatchListPage />
+          </TabsContent>
+          <TabsContent
+            value="recommend"
+            activeTab={tab}
+            isActive={tab == "recommend"}
+          >
+            <RecommendPage />
           </TabsContent>
         </Tabs>
       </div>
