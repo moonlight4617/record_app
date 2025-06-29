@@ -91,7 +91,7 @@ async def test_edit_content(mock_dependencies):  # noqa: F811
 
 @pytest.mark.asyncio
 async def test_content_edit_invalid_content_id(
-        mock_dependencies,  # noqa: F811
+    mock_dependencies,  # noqa: F811
 ):
     """異常系: 更新対象のcontentIdが存在しない場合の返却値が想定通りであることを確認"""
     mock_table = mock_dependencies
