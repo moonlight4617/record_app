@@ -37,6 +37,36 @@ mock_content_items = [
     },
 ]
 
+# APIレスポンスで期待される形式（type_dateフィールドと順序を考慮）
+expected_response = [
+    {
+        "contentId": "2",
+        "type": "book",
+        "title": "Title 2",
+        "date": "2024-08-15", 
+        "type_date": None,
+        "year": 2024,
+        "notes": "Note 2",
+        "userId": mock_user_id,
+        "link": "https://example2.com",
+        "status": None,
+        "rank": None,
+    },
+    {
+        "contentId": "1",
+        "type": "movie", 
+        "title": "Title 1",
+        "date": "2024-11-10",
+        "type_date": None,
+        "year": 2024,
+        "notes": "Note 1",
+        "userId": mock_user_id,
+        "link": "https://example1.com",
+        "status": None,
+        "rank": None,
+    },
+]
+
 client = TestClient(app)
 
 
@@ -51,7 +81,7 @@ async def test_get_year_contents_success(mock_dependencies):  # noqa: F811
 
     # レスポンスのアサーション
     assert response.status_code == 200
-    assert response.json() == mock_content_items
+    assert response.json() == expected_response
 
     # 実際の KeyConditionExpression を作成
     expected_key_condition = Key("userId").eq("test_user") & Key("year").eq(
