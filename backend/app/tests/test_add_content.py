@@ -1,9 +1,11 @@
-import pytest
-from fastapi.testclient import TestClient
 from unittest.mock import MagicMock
+
+import pytest
+from botocore.exceptions import ClientError
+from fastapi.testclient import TestClient
+
 from app.main import app
 from app.schemas.content import RegisterContentData
-from botocore.exceptions import ClientError
 from app.tests.conftest import mock_dependencies, mock_user_id  # noqa: F401
 
 # モック用データ

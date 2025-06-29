@@ -1,6 +1,7 @@
 import os
+
 from dotenv import load_dotenv
-from fastapi import HTTPException, APIRouter
+from fastapi import APIRouter, HTTPException
 from fastapi.responses import Response
 
 router = APIRouter(prefix="/account")
@@ -17,16 +18,20 @@ def logout(response: Response):
     try:
         if ENVIRONMENT == "production":
             response.delete_cookie(
-                key="access_token", domain=DOMAIN,
+                key="access_token",
+                domain=DOMAIN,
             )
             response.delete_cookie(
-                key="id_token", domain=DOMAIN,
+                key="id_token",
+                domain=DOMAIN,
             )
             response.delete_cookie(
-                key="refresh_token", domain=DOMAIN,
+                key="refresh_token",
+                domain=DOMAIN,
             )
             response.delete_cookie(
-                key="user_id", domain=DOMAIN,
+                key="user_id",
+                domain=DOMAIN,
             )
         else:
             response.delete_cookie(

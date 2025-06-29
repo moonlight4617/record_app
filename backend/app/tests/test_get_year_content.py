@@ -1,9 +1,11 @@
-import pytest
-from fastapi.testclient import TestClient
 from unittest.mock import MagicMock
-from app.main import app
-from botocore.exceptions import ClientError
+
+import pytest
 from boto3.dynamodb.conditions import Key
+from botocore.exceptions import ClientError
+from fastapi.testclient import TestClient
+
+from app.main import app
 from app.tests.conftest import mock_dependencies, mock_user_id  # noqa: F401
 
 # モックデータと設定
@@ -65,7 +67,9 @@ async def test_get_year_contents_success(mock_dependencies):  # noqa: F811
 
 # 異常系テスト: DynamoDBクエリ失敗
 @pytest.mark.asyncio
-async def test_get_year_contents_dynamodb_error(mock_dependencies):  # noqa: E501,F811
+async def test_get_year_contents_dynamodb_error(
+    mock_dependencies,  # noqa: F811
+):
     """異常系: DynamoDBがエラーをスローした場合の返却値が想定通り"""
     mock_table = mock_dependencies
     mock_table.query = MagicMock(
@@ -84,7 +88,10 @@ async def test_get_year_contents_dynamodb_error(mock_dependencies):  # noqa: E50
 
     # 検証
     assert response.status_code == 500  # 内部サーバーエラー
-    assert response.json()["detail"] == "An error occurred (ProvisionedThroughputExceededException) when calling the Query operation: Rate exceeded"  # noqa: E501
+    assert (
+        response.json()["detail"]
+        == "An error occurred (ProvisionedThroughputExceededException) when calling the Query operation: Rate exceeded"  # noqa: E501
+    )
 
 
 # 異常系テスト: クエリ結果が空の場合

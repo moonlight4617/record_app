@@ -1,8 +1,10 @@
-from app.db.dynamodb import get_content_table
-from app.services.user_service import get_user_id
-from app.schemas.content import DependsData
-from fastapi import Depends
 from typing import Any
+
+from fastapi import Depends
+
+from app.db.dynamodb import get_content_table
+from app.schemas.content import DependsData
+from app.services.user_service import get_user_id
 
 
 async def get_content_table_and_user_id(

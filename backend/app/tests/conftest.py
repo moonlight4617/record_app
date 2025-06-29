@@ -1,8 +1,10 @@
-import pytest
 from unittest.mock import MagicMock
+
+import pytest
+
 from app.main import app
-from app.services.depends_service import get_content_table_and_user_id
 from app.schemas.content import DependsData
+from app.services.depends_service import get_content_table_and_user_id
 
 # モック用データ
 mock_user_id = "test_user"

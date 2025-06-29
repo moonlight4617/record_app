@@ -1,10 +1,11 @@
-from fastapi import APIRouter, HTTPException, Depends
-from app.services.content_service import update_best_service
-from app.schemas.content import ContentData, DependsData
-from app.services.depends_service import get_content_table_and_user_id
-
 import traceback
 from typing import List
+
+from fastapi import APIRouter, Depends, HTTPException
+
+from app.schemas.content import ContentData, DependsData
+from app.services.content_service import update_best_service
+from app.services.depends_service import get_content_table_and_user_id
 
 router = APIRouter(prefix="/content")
 
