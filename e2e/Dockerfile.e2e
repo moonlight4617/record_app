@@ -1,0 +1,28 @@
+# E2Eテスト用Dockerfile
+FROM mcr.microsoft.com/playwright:v1.40.0-focal
+
+# 作業ディレクトリを作成
+WORKDIR /app
+
+# package.jsonとpackage-lock.jsonをコピー
+# COPY package*.json ./
+# アプリケーションファイルをコピー
+COPY . .
+
+# 依存関係をインストール
+# package-lock.jsonが存在しない場合に備えてnpm installを使用
+RUN npm install
+
+# 環境変数を設定
+ENV BASE_URL=http://frontend:3000
+ENV API_URL=http://backend:8000
+
+# Playwrightの依存関係を確実にインストール
+RUN npx playwright install-deps
+RUN npx playwright install
+
+# テスト結果用ディレクトリを作成
+RUN mkdir -p test-results playwright-report
+
+# E2Eテストコンテナを起動状態で保持（手動実行用）
+CMD ["tail", "-f", "/dev/null"]

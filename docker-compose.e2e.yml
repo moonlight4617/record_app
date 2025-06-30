@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  e2e-tests:
+    build:
+      context: ./e2e
+      dockerfile: Dockerfile.e2e
+    container_name: e2e-tests
+    volumes:
+      - ./e2e:/app
+      - /app/node_modules
+    environment:
+      - BASE_URL=http://frontend:3000
+      - API_URL=http://backend:8000
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - default
+
+networks:
+  default:
+    driver: bridge
