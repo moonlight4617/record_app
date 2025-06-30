@@ -29,13 +29,15 @@ test.describe("コンテンツ登録フロー", () => {
     // メールフィールドの存在を確認
     const emailField = page.locator("#email");
     await emailField.waitFor({ state: "visible", timeout: 5000 });
+    // TODO: 後ほどメールアドレスを実際の値に変更する
     await emailField.fill("sample123@sample.com");
     console.log("メールアドレスを入力しました");
 
     // パスワードフィールドの存在を確認
     const passwordField = page.locator("#password");
     await passwordField.waitFor({ state: "visible", timeout: 5000 });
-    await passwordField.fill("Password123");
+    // TODO: 後ほどパスワードを実際の値に変更する
+    await passwordField.fill("");
     console.log("パスワードを入力しました");
 
     // フォームの準備が整うまで少し待機
