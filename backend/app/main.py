@@ -11,6 +11,7 @@ from app.routers import (add_content, add_watchlist, delete_watchlist,
 app = FastAPI()
 origins = [
     "http://localhost:3000",
+    "http://frontend:3000",  # E2Eテスト環境用
     "https://record-app-moonlight4617s-projects.vercel.app",
     "https://www.memoapp.jp",
     "https://memoapp.jp",

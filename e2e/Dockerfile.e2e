@@ -5,21 +5,20 @@ FROM mcr.microsoft.com/playwright:v1.40.0-focal
 WORKDIR /app
 
 # package.jsonとpackage-lock.jsonをコピー
+COPY ./package.json ./
+COPY ./package-lock.json ./
 # COPY package*.json ./
-# アプリケーションファイルをコピー
-COPY . .
 
-# 依存関係をインストール
 # package-lock.jsonが存在しない場合に備えてnpm installを使用
 RUN npm install
 
-# 環境変数を設定
-ENV BASE_URL=http://frontend:3000
-ENV API_URL=http://backend:8000
+# アプリケーションファイルをコピー
+COPY ./tests ./
+COPY ./playwright.config.ts ./
+COPY ./.env.local ./
 
-# Playwrightの依存関係を確実にインストール
-RUN npx playwright install-deps
-RUN npx playwright install
+# 依存関係をインストール
+RUN npx playwright install --with-deps || npx playwright install
 
 # テスト結果用ディレクトリを作成
 RUN mkdir -p test-results playwright-report
