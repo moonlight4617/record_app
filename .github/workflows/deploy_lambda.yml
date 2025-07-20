@@ -7,7 +7,7 @@ on:
 
 jobs:
   # CI: Pythonのテストを実行
-  test:
+  test-backend:
     runs-on: ubuntu-latest
 
     steps:
@@ -40,8 +40,45 @@ jobs:
         run: |
           pytest backend/app/tests/
 
+  # CI: フロントエンドのテストを実行
+  test-frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      # リポジトリのクローン
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Node.jsをセットアップ
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18" # Next.js 14に適したNode.jsバージョン
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+
+      # 依存関係をインストール
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm ci
+
+      # Lintチェック
+      - name: Run lint
+        working-directory: frontend
+        run: npm run lint
+
+      # 単体テスト
+      - name: Run unit tests
+        working-directory: frontend
+        run: npm run test
+
+      # ビルドテスト
+      - name: Build frontend
+        working-directory: frontend
+        run: npm run build
+
   deploy:
-    needs: test
+    needs: [test-backend, test-frontend]
     runs-on: ubuntu-latest
 
     steps:
