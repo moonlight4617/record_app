@@ -11,7 +11,10 @@ import { BookOpen, Film } from "lucide-react";
 type Recommendation = {
   title: string;
   desc: string;
-  link: string;
+  links?: Array<{
+    site_name: string;
+    url: string;
+  }>;
 };
 
 export const RecommendPage = () => {
@@ -25,13 +28,15 @@ export const RecommendPage = () => {
     const recommendations = await getRecommend(type);
     console.log("recommendations: ", recommendations);
 
-    if (
-      error ||
-      !Array.isArray(recommendations) ||
-      recommendations.length === 0
-    ) {
+    if (error || !Array.isArray(recommendations)) {
       toast.error(flashMessages.FAILED_GET_RECOMMENDATIONS);
       console.log(error);
+      return;
+    }
+
+    // 推薦リストが0件の場合はエラーとして扱わない
+    if (recommendations.length === 0) {
+      setRecommendations([]);
       return;
     }
 
@@ -40,34 +45,64 @@ export const RecommendPage = () => {
       {
         title: "Inception",
         desc: "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O.",
-        link: "https://www.imdb.com/title/tt1375666/",
+        links: [
+          {
+            site_name: "Amazon",
+            url: "https://www.imdb.com/title/tt1375666/",
+          },
+        ],
       },
       {
         title: "The Shawshank Redemption",
         desc: "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.",
-        link: "https://www.imdb.com/title/tt0111161/",
+        links: [
+          {
+            site_name: "IMDb",
+            url: "https://www.imdb.com/title/tt0111161/",
+          },
+        ],
       },
       {
         title: "Spirited Away",
         desc: "During her family's move to the suburbs, a sullen 10-year-old girl wanders into a world ruled by gods, witches, and spirits, and where humans are changed into beasts.",
-        link: "https://www.imdb.com/title/tt0245429/",
+        links: [
+          {
+            site_name: "IMDb",
+            url: "https://www.imdb.com/title/tt0245429/",
+          },
+        ],
       },
     ];
     const bookRecommendations: Recommendation[] = [
       {
         title: "1984",
         desc: "A dystopian novel by George Orwell about a totalitarian regime and the rebellion against it.",
-        link: "https://www.goodreads.com/book/show/40961427-1984",
+        links: [
+          {
+            site_name: "Goodreads",
+            url: "https://www.goodreads.com/book/show/40961427-1984",
+          },
+        ],
       },
       {
         title: "The Alchemist",
         desc: "Paulo Coelho's masterpiece tells the mystical story of Santiago, an Andalusian shepherd boy who yearns to travel in search of a worldly treasure.",
-        link: "https://www.goodreads.com/book/show/865.The_Alchemist",
+        links: [
+          {
+            site_name: "Goodreads",
+            url: "https://www.goodreads.com/book/show/865.The_Alchemist",
+          },
+        ],
       },
       {
         title: "Norwegian Wood",
         desc: "A novel by Japanese author Haruki Murakami about loss and growing up.",
-        link: "https://www.goodreads.com/book/show/11297.Norwegian_Wood",
+        links: [
+          {
+            site_name: "Goodreads",
+            url: "https://www.goodreads.com/book/show/11297.Norwegian_Wood",
+          },
+        ],
       },
     ];
     // if (type === "movie") {
@@ -86,6 +121,12 @@ export const RecommendPage = () => {
           <div className="grid gap-6">
             {loading ? (
               <Loading />
+            ) : recommendations.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-gray-600 text-lg">
+                  現在、おススメできる作品はありません。
+                </p>
+              </div>
             ) : (
               recommendations.map((item, index) => (
                 <div
@@ -102,14 +143,24 @@ export const RecommendPage = () => {
                     {item.title}
                   </h3>
                   <p className="text-gray-600 mb-2">{item.desc}</p>
-                  {item.link && (
-                    <a
-                      href={item.link}
-                      target="_blank"
-                      className="text-blue-500 hover:underline flex items-center"
-                    >
-                      詳細を見る →
-                    </a>
+                  {item.links && item.links.length > 0 && (
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium text-gray-700">
+                        関連リンク:
+                      </p>
+                      {item.links.map((link, linkIndex) => (
+                        <div key={linkIndex}>
+                          <a
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-500 hover:underline text-sm"
+                          >
+                            {link.site_name}
+                          </a>
+                        </div>
+                      ))}
+                    </div>
                   )}
                 </div>
               ))

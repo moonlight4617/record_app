@@ -1,0 +1,39 @@
+version: "3.8"
+
+services:
+  frontend:
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:8000
+    networks:
+      - default
+
+  backend:
+    environment:
+      - ENV=local
+      - E2E_TEST_MODE=true
+    networks:
+      - default
+
+  e2e-tests:
+    build:
+      context: ./e2e
+      dockerfile: Dockerfile.e2e
+    container_name: e2e-tests
+    volumes:
+      - ./e2e:/app
+      - /app/node_modules
+    ports:
+      - "9323:9323"
+    environment:
+      - BASE_URL=http://frontend:3000
+      - API_URL=http://backend:8000
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - default
+    command: npm run test:e2e
+networks:
+  default:
+    external: true
+    name: record_app_default
