@@ -10,15 +10,23 @@ const {
 
 // export async function GET(request: NextRequest) {
 export async function GET() {
+  // 環境変数が設定されていない場合はエラーレスポンスを返す
+  if (!NEXT_PUBLIC_COGNITO_DOMAIN || !NEXT_PUBLIC_CLIENT_ID || !NEXT_PUBLIC_REDIRECT_URI || !NEXT_PUBLIC_STATE) {
+    return NextResponse.json(
+      { error: "Authentication configuration not available" },
+      { status: 500 }
+    );
+  }
+
   const authorizeParams = new URLSearchParams();
   // const origin = request.nextUrl.origin
   // const state = crypto.randomBytes(16).toString('hex')
 
   authorizeParams.append("response_type", "code");
-  authorizeParams.append("client_id", NEXT_PUBLIC_CLIENT_ID as string);
+  authorizeParams.append("client_id", NEXT_PUBLIC_CLIENT_ID);
   // authorizeParams.append('redirect_uri', `${origin}/api/auth/google-callback`)
-  authorizeParams.append("redirect_uri", NEXT_PUBLIC_REDIRECT_URI as string);
-  authorizeParams.append("state", NEXT_PUBLIC_STATE as string);
+  authorizeParams.append("redirect_uri", NEXT_PUBLIC_REDIRECT_URI);
+  authorizeParams.append("state", NEXT_PUBLIC_STATE);
   authorizeParams.append("identity_provider", "Google");
   authorizeParams.append("scope", "profile email openid");
 

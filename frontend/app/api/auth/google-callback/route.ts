@@ -10,6 +10,14 @@ const {
 
 export async function GET(request: NextRequest) {
   try {
+    // 環境変数が設定されていない場合はエラーレスポンスを返す
+    if (!NEXT_PUBLIC_COGNITO_DOMAIN || !NEXT_PUBLIC_CLIENT_ID || !NEXT_PUBLIC_REDIRECT_URI) {
+      return NextResponse.json(
+        { error: "Authentication configuration not available" },
+        { status: 500 }
+      );
+    }
+
     // const origin = request.nextUrl.origin
     const searchParams = request.nextUrl.searchParams;
     const code = searchParams.get("code") as string;
@@ -21,10 +29,10 @@ export async function GET(request: NextRequest) {
 
     const requestBody = new URLSearchParams({
       grant_type: "authorization_code",
-      client_id: NEXT_PUBLIC_CLIENT_ID as string,
+      client_id: NEXT_PUBLIC_CLIENT_ID,
       code: code,
       // redirect_uri: `${origin}/api/auth/callback`
-      redirect_uri: NEXT_PUBLIC_REDIRECT_URI as string,
+      redirect_uri: NEXT_PUBLIC_REDIRECT_URI,
     });
 
     // Get tokens
