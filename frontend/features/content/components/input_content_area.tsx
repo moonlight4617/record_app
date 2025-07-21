@@ -54,6 +54,7 @@ export const InputContentArea: React.FC<InputContentAreaProps> = ({
           placeholder={placeholders.TITLE}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          data-testid="input-title"
         />
       </div>
       {isWatchList ? (
@@ -68,6 +69,7 @@ export const InputContentArea: React.FC<InputContentAreaProps> = ({
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
+              data-testid="input-date"
             />
           </div>
           <div className="flex flex-col space-y-1.5">
@@ -78,6 +80,7 @@ export const InputContentArea: React.FC<InputContentAreaProps> = ({
               placeholder={placeholders.NOTES}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
+              data-testid="textarea-notes"
             />
           </div>
         </>
@@ -91,6 +94,7 @@ export const InputContentArea: React.FC<InputContentAreaProps> = ({
           placeholder={placeholders.LINK}
           value={link}
           onChange={(e) => setLink(e.target.value)}
+          data-testid="input-link"
         />
       </div>
     </div>

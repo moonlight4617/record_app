@@ -2,6 +2,22 @@
 
 このディレクトリには、アプリケーションのE2Eテスト（End-to-End Testing）が含まれています。
 
+## 🔧 環境設定
+
+E2Eテストを実行する前に、認証情報を環境変数ファイルに設定してください：
+
+```bash
+# e2eディレクトリに移動
+cd e2e
+
+# 環境変数ファイルをコピーして設定
+cp .env.example .env
+
+# 必要に応じて認証情報を編集
+# E2E_TEST_EMAIL=your-test-email@example.com
+# E2E_TEST_PASSWORD=your-test-password
+```
+
 ## 🚀 推奨実行手順（Dockerコンテナ使用）
 
 最も簡単で確実な方法です：

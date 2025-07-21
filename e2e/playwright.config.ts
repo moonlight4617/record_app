@@ -1,7 +1,10 @@
 import { defineConfig, devices } from "@playwright/test";
+import * as dotenv from 'dotenv';
+
+// 環境変数ファイルを読み込み
+dotenv.config({ path: '.env' });
 
 const baseURL = process.env.BASE_URL || "http://localhost:3000";
-const apiURL = process.env.API_URL || "http://localhost:8000";
 
 export default defineConfig({
   testDir: "./tests",

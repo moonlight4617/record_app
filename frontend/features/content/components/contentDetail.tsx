@@ -92,6 +92,7 @@ export const ContentDetail: React.FC<ContentProps> = ({
                 <button
                   onClick={() => handleEdit()}
                   className="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
+                  data-testid={`edit-button-${content.contentId}`}
                 >
                   編集
                 </button>

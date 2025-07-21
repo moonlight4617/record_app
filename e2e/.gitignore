@@ -4,4 +4,13 @@
 /node_modules
 /playwright-report
 /test-results
-.env*
+
+# Environment files (except example)
+.env
+.env.local
+.env.test
+.env.test.local
+.env.production
+.env.production.local
+# Keep example files in version control
+!.env.example
