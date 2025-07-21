@@ -97,7 +97,7 @@ def search_movie_links_tmdb(title: str) -> List[dict]:
             return []
 
         # 映画検索
-        search_url = f"https://api.themoviedb.org/3/search/movie"
+        search_url = "https://api.themoviedb.org/3/search/movie"
         params = {
             "api_key": api_key,
             "query": title,
@@ -124,9 +124,13 @@ def search_movie_links_tmdb(title: str) -> List[dict]:
         })
 
         # IMDb リンク (外部IDから取得)
-        # external_url = f"https://api.themoviedb.org/3/movie/{movie_id}/external_ids"
+        # external_url = (
+        #     f"https://api.themoviedb.org/3/movie/{movie_id}/external_ids"
+        # )
         # external_params = {"api_key": api_key}
-        # external_response = requests.get(external_url, params=external_params)
+        # external_response = requests.get(
+        #     external_url, params=external_params
+        # )
 
         # if external_response.status_code == 200:
         #     external_data = external_response.json()
@@ -171,7 +175,6 @@ def search_book_links_google(title: str) -> List[dict]:
             return []
 
         book = data["items"][0]
-        volume_info = book.get("volumeInfo", {})
 
         links = []
 
