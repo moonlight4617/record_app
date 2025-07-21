@@ -87,7 +87,12 @@ describe("RecommendPage", () => {
       {
         title: "テスト映画",
         desc: "テスト映画の説明",
-        link: "https://example.com/movie",
+        links: [
+          {
+            site_name: "TMDB",
+            url: "https://example.com/movie",
+          },
+        ],
       },
     ];
 
@@ -109,7 +114,12 @@ describe("RecommendPage", () => {
       {
         title: "テスト本",
         desc: "テスト本の説明",
-        link: "https://example.com/book",
+        links: [
+          {
+            site_name: "Google Books",
+            url: "https://example.com/book",
+          },
+        ],
       },
     ];
 
@@ -146,12 +156,22 @@ describe("RecommendPage", () => {
       {
         title: "アベンジャーズ",
         desc: "スーパーヒーロー映画",
-        link: "https://example.com/avengers",
+        links: [
+          {
+            site_name: "TMDB",
+            url: "https://example.com/avengers",
+          },
+        ],
       },
       {
         title: "タイタニック",
         desc: "ロマンス映画",
-        link: "https://example.com/titanic",
+        links: [
+          {
+            site_name: "TMDB",
+            url: "https://example.com/titanic",
+          },
+        ],
       },
     ];
 
@@ -175,7 +195,12 @@ describe("RecommendPage", () => {
       {
         title: "ハリーポッター",
         desc: "ファンタジー小説",
-        link: "https://example.com/harry-potter",
+        links: [
+          {
+            site_name: "Google Books",
+            url: "https://example.com/harry-potter",
+          },
+        ],
       },
     ];
 
@@ -197,7 +222,12 @@ describe("RecommendPage", () => {
       {
         title: "テスト映画",
         desc: "テスト説明",
-        link: "https://example.com/test",
+        links: [
+          {
+            site_name: "TMDB",
+            url: "https://example.com/test",
+          },
+        ],
       },
     ];
 
@@ -208,7 +238,7 @@ describe("RecommendPage", () => {
     fireEvent.click(screen.getByText("映画"));
 
     await waitFor(() => {
-      const link = screen.getByText("詳細を見る →");
+      const link = screen.getByText("TMDB");
       expect(link.closest("a")).toHaveAttribute(
         "href",
         "https://example.com/test"
@@ -222,7 +252,7 @@ describe("RecommendPage", () => {
       {
         title: "テスト映画",
         desc: "テスト説明",
-        link: "",
+        links: [],
       },
     ];
 
@@ -234,7 +264,7 @@ describe("RecommendPage", () => {
 
     await waitFor(() => {
       expect(screen.getByText("テスト映画")).toBeInTheDocument();
-      expect(screen.queryByText("詳細を見る →")).not.toBeInTheDocument();
+      expect(screen.queryByText("関連リンク:")).not.toBeInTheDocument();
     });
   });
 
@@ -258,7 +288,7 @@ describe("RecommendPage", () => {
     });
   });
 
-  it("空の配列が返された場合にトーストエラーが表示される", async () => {
+  it("空の配列が返された場合におススメなしメッセージが表示される", async () => {
     mockGetRecommend.mockResolvedValue([]);
 
     render(<RecommendPage />);
@@ -266,9 +296,7 @@ describe("RecommendPage", () => {
     fireEvent.click(screen.getByText("映画"));
 
     await waitFor(() => {
-      expect(mockToast.error).toHaveBeenCalledWith(
-        flashMessages.FAILED_GET_RECOMMENDATIONS
-      );
+      expect(screen.getByText("現在、おススメできる作品はありません。")).toBeInTheDocument();
     });
   });
 
