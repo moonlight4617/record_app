@@ -20,16 +20,16 @@ while [ $counter -lt $timeout ]; do
     # より安全な方法でサービスの状態をチェック
     frontend_ready=false
     backend_ready=false
-    
-    # フロントエンドの確認
+
+    # Nginxプロキシ経由でフロントエンドの確認
     if command -v curl >/dev/null 2>&1; then
-        if curl -f http://localhost:3000 >/dev/null 2>&1; then
+        if curl -f http://localhost/ >/dev/null 2>&1; then
             frontend_ready=true
         fi
     else
         # curlが使えない場合はwgetを試す
         if command -v wget >/dev/null 2>&1; then
-            if wget -q --spider http://localhost:3000 2>/dev/null; then
+            if wget -q --spider http://localhost 2>/dev/null; then
                 frontend_ready=true
             fi
         else
@@ -39,15 +39,15 @@ while [ $counter -lt $timeout ]; do
             fi
         fi
     fi
-    
-    # バックエンドの確認
+
+    # Nginxプロキシ経由でバックエンドの確認
     if command -v curl >/dev/null 2>&1; then
-        if curl -f http://localhost:8000/health >/dev/null 2>&1; then
+        if curl -f http://localhost/api/health >/dev/null 2>&1; then
             backend_ready=true
         fi
     else
         if command -v wget >/dev/null 2>&1; then
-            if wget -q --spider http://localhost:8000/health 2>/dev/null; then
+            if wget -q --spider http://localhost/api/health 2>/dev/null; then
                 backend_ready=true
             fi
         else
@@ -56,12 +56,12 @@ while [ $counter -lt $timeout ]; do
             fi
         fi
     fi
-    
+
     if [ "$frontend_ready" = true ] && [ "$backend_ready" = true ]; then
         echo "サービスの準備が完了しました"
         break
     fi
-    
+
     echo "サービス起動を待機中... ($counter/$timeout) [Frontend: $frontend_ready, Backend: $backend_ready]"
     sleep 2
     counter=$((counter + 2))

@@ -20,6 +20,9 @@ export default defineConfig({
     video: "retain-on-failure",
     // コンテナ環境での実行時の設定
     headless: true,
+    // タイムアウトを延長
+    actionTimeout: 30000,
+    navigationTimeout: 30000,
   },
   projects: [
     {

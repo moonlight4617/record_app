@@ -97,23 +97,39 @@ async def login(auth_request: AuthRequest, response: JSONResponse):
                 domain=DOMAIN,
             )
         else:
+            # ローカル開発環境とE2E環境用の設定
+            # E2E環境では明示的にドメインを設定しない（すべてのサブドメインで有効）
             response.set_cookie(
                 key="access_token",
                 value=access_token,
                 httponly=True,
                 samesite="Lax",
+                secure=False,  # HTTP環境でも動作するように
+                path="/",  # パスを明示的に指定
             )
             response.set_cookie(
-                key="id_token", value=id_token, httponly=True, samesite="Lax"
+                key="id_token", 
+                value=id_token, 
+                httponly=True, 
+                samesite="Lax",
+                secure=False,
+                path="/",
             )
             response.set_cookie(
                 key="refresh_token",
                 value=refresh_token,
                 httponly=True,
                 samesite="Lax",
+                secure=False,
+                path="/",
             )
             response.set_cookie(
-                key="user_id", value=user_id, httponly=True, samesite="Lax"
+                key="user_id", 
+                value=user_id, 
+                httponly=True, 
+                samesite="Lax",
+                secure=False,
+                path="/",
             )
 
         return response
