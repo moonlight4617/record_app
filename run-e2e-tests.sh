@@ -11,6 +11,30 @@ cd "$(dirname "$0")"
 echo "既存のfrontendとbackendサービスを確認中..."
 docker-compose ps
 
+# E2Eテストに必要なNginxプロキシの起動を確認・実行
+echo "E2EテストのためのNginxプロキシを確認中..."
+if command -v jq >/dev/null 2>&1; then
+    nginx_running=$(docker-compose -f docker-compose.yml -f docker-compose.e2e.yml ps nginx --format json 2>/dev/null | jq -r '.State' 2>/dev/null || echo "not_found")
+else
+    # jqが使えない場合の代替方法
+    nginx_status=$(docker-compose -f docker-compose.yml -f docker-compose.e2e.yml ps nginx 2>/dev/null | grep nginx | grep -o "running\|Up" || echo "not_found")
+    if [ "$nginx_status" = "running" ] || [ "$nginx_status" = "Up" ]; then
+        nginx_running="running"
+    else
+        nginx_running="not_found"
+    fi
+fi
+
+if [ "$nginx_running" != "running" ]; then
+    echo "Nginxプロキシが停止中または未起動です。E2E環境を起動します..."
+    docker-compose -f docker-compose.yml -f docker-compose.e2e.yml up -d nginx
+    echo "Nginxプロキシの起動完了を待機中..."
+    sleep 5
+    echo "Nginxプロキシの起動完了"
+else
+    echo "Nginxプロキシは既に起動中です"
+fi
+
 # サービスが起動するまで待機
 echo "フロントエンドとバックエンドサービスの準備完了を待機中..."
 timeout=60

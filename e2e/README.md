@@ -1,10 +1,10 @@
-# E2Eテスト実行ガイド
+# E2E テスト実行ガイド
 
-このディレクトリには、アプリケーションのE2Eテスト（End-to-End Testing）が含まれています。
+このディレクトリには、アプリケーションの E2E テスト（End-to-End Testing）が含まれています。
 
 ## 🔧 環境設定
 
-E2Eテストを実行する前に、認証情報を環境変数ファイルに設定してください：
+E2E テストを実行する前に、認証情報を環境変数ファイルに設定してください：
 
 ```bash
 # e2eディレクトリに移動
@@ -18,7 +18,7 @@ cp .env.example .env
 # E2E_TEST_PASSWORD=your-test-password
 ```
 
-## 🚀 推奨実行手順（Dockerコンテナ使用）
+## 🚀 推奨実行手順（Docker コンテナ使用）
 
 最も簡単で確実な方法です：
 
@@ -26,14 +26,17 @@ cp .env.example .env
 # 1. プロジェクトルートに移動
 cd /path/to/record_app
 
-# 2. E2E環境を起動（既存コンテナ + Nginx）
-docker-compose -f docker-compose.e2e.yml up -d
+# 2. 基本サービス（frontend, backend）を起動
+docker-compose up -d
 
-# 3. E2Eテストを実行
-docker-compose -f docker-compose.e2e.yml exec e2e-tests npx playwright test --project=chromium
+# 3. E2E環境（Nginx + テストコンテナ）を追加起動
+docker-compose -f docker-compose.yml -f docker-compose.e2e.yml up -d nginx
 
-# 4. テスト後のクリーンアップ（オプション）
-docker-compose -f docker-compose.e2e.yml down
+# 4. E2Eテストを実行
+docker-compose -f docker-compose.yml -f docker-compose.e2e.yml up e2e-tests --abort-on-container-exit
+
+# 5. テスト後のクリーンアップ（オプション）
+docker-compose -f docker-compose.yml -f docker-compose.e2e.yml down nginx e2e-tests
 ```
 
 ## 🛠️ 簡単実行スクリプト
@@ -45,9 +48,11 @@ docker-compose -f docker-compose.e2e.yml down
 ```
 
 このスクリプトは以下を自動で行います：
-- サービスの起動確認
-- Nginxプロキシ経由でのヘルスチェック
-- E2Eテストの実行
+
+- 既存サービス（frontend, backend）の起動確認
+- Nginx プロキシの自動起動（未起動の場合）
+- Nginx プロキシ経由でのヘルスチェック
+- E2E テストの実行
 - 結果レポートの場所表示
 
 ## 💻 ローカル環境での直接実行
@@ -56,7 +61,8 @@ docker-compose -f docker-compose.e2e.yml down
 
 ```bash
 # 1. E2E環境を先に起動（必須）
-docker-compose -f docker-compose.e2e.yml up -d nginx frontend backend
+docker-compose up -d
+docker-compose -f docker-compose.yml -f docker-compose.e2e.yml up -d nginx
 
 # 2. e2eディレクトリに移動
 cd e2e
@@ -77,13 +83,13 @@ npm run test:e2e:manual       # HTMLレポート生成
 
 ## 🎯 各実行モードの説明
 
-| コマンド | 説明 | 用途 |
-|----------|------|------|
-| `test:e2e` | ヘッドレス実行 | CI/CD、自動化 |
-| `test:e2e:headed` | ブラウザウィンドウ表示 | 動作確認 |
-| `test:e2e:ui` | インタラクティブUIモード | 開発・デバッグ |
-| `test:e2e:debug` | ステップ実行可能 | 詳細デバッグ |
-| `test:e2e:manual` | HTMLレポート生成 | 結果の詳細確認 |
+| コマンド          | 説明                       | 用途           |
+| ----------------- | -------------------------- | -------------- |
+| `test:e2e`        | ヘッドレス実行             | CI/CD、自動化  |
+| `test:e2e:headed` | ブラウザウィンドウ表示     | 動作確認       |
+| `test:e2e:ui`     | インタラクティブ UI モード | 開発・デバッグ |
+| `test:e2e:debug`  | ステップ実行可能           | 詳細デバッグ   |
+| `test:e2e:manual` | HTML レポート生成          | 結果の詳細確認 |
 
 ## 📊 テスト結果の確認
 
@@ -98,22 +104,22 @@ ls playwright-report/     # HTMLレポート
 
 ## 🏗️ アーキテクチャ
 
-### Nginxリバースプロキシ構成
+### Nginx リバースプロキシ構成
 
 ```
 http://nginx/          → フロントエンド (Next.js)
 http://nginx/api/      → バックエンド (FastAPI)
 ```
 
-この構成により、フロントエンドとバックエンドが同一ドメインになり、Cookieの共有問題が解決されています。
+この構成により、フロントエンドとバックエンドが同一ドメインになり、Cookie の共有問題が解決されています。
 
 ### 認証フロー
 
-1. UI操作によるログイン（本番と同様のフロー）
+1. UI 操作によるログイン（本番と同様のフロー）
 2. テスト用アカウント: `sample123@sample.com`
-3. サーバーからSet-Cookieヘッダーでcookie設定
-4. ブラウザが自動的にcookieを送信
-5. リアルなE2Eテストフローを実現
+3. サーバーから Set-Cookie ヘッダーで cookie 設定
+4. ブラウザが自動的に cookie を送信
+5. リアルな E2E テストフローを実現
 
 ## 🔧 トラブルシューティング
 
@@ -141,7 +147,7 @@ curl http://localhost/              # フロントエンド
 curl http://localhost/api/docs      # バックエンドAPI
 ```
 
-### Playwrightブラウザの問題
+### Playwright ブラウザの問題
 
 ```bash
 # ブラウザの再インストール
@@ -162,7 +168,8 @@ e2e/
 │   └── content/
 │       ├── content-registration.spec.ts  # コンテンツ登録テスト
 │       ├── content-edit.spec.ts         # コンテンツ編集テスト
-│       └── content-delete.spec.ts       # コンテンツ削除テスト
+│       ├── content-recommend.spec.ts    # レコメンド機能テスト
+│       └── content-watchlist.spec.ts    # ウォッチリスト機能テスト
 ├── test-results/            # テスト実行結果
 └── playwright-report/       # HTMLレポート
 ```
@@ -172,22 +179,23 @@ e2e/
 1. **初回セットアップ**: `./run-e2e-tests.sh`で全体動作を確認
 2. **開発時**: `npm run test:e2e:ui`でテスト作成・デバッグ
 3. **CI/CD**: `npm run test:e2e`でヘッドレス実行
-4. **結果確認**: `npx playwright show-report`でHTMLレポート表示
+4. **結果確認**: `npx playwright show-report`で HTML レポート表示
 
-## 📊 テスト実行状況 (2025-01-19更新)
+## 📊 テスト実行状況 (2025-07-26 更新)
 
-| テストスイート | 状態 | 説明 |
-|--------------|------|------|
+| テストスイート | 状態      | 説明                               |
+| -------------- | --------- | ---------------------------------- |
 | コンテンツ登録 | ✅ PASSED | ログイン〜登録〜確認の全フロー成功 |
-| コンテンツ削除 | ✅ PASSED | 登録〜削除〜確認の全フロー成功 |
-| コンテンツ編集 | ⚠️ FAILED | 編集フォーム要素の取得でエラー（要修正） |
+| コンテンツ編集 | ✅ PASSED | 登録〜編集〜保存の全フロー成功     |
+| レコメンド機能 | ✅ PASSED | 認証状態でのレコメンド機能確認     |
+| ウォッチリスト | ✅ PASSED | ウォッチリスト追加・削除フロー成功 |
 
-**実行時間**: 登録30-40秒、削除30秒、編集タイムアウト
-**成功率**: 2/3 (66%)
+**実行時間**: 約 2 分（全テスト）
+**成功率**: 4/4 (100%)
 
 ## 📝 注意事項
 
-- UI操作によるリアルなログインフローを使用（テストアカウント: sample123@sample.com）
-- テスト実行前に必ずDockerサービスが起動していることを確認
-- Nginxリバースプロキシにより統一ドメインでCookie共有を実現
+- UI 操作によるリアルなログインフローを使用（テストアカウント: sample123@sample.com）
+- テスト実行前に必ず Docker サービスが起動していることを確認
+- Nginx リバースプロキシにより統一ドメインで Cookie 共有を実現
 - スクリーンショット・動画による詳細なデバッグ情報を自動保存

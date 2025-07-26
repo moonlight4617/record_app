@@ -39,7 +39,7 @@ test.describe("コンテンツ登録フロー", () => {
 
     // ログイン処理の完了を待機
     await page.waitForTimeout(3000); // フォーム送信後の処理を待機
-    
+
     try {
       // ログイン成功の確認（複数の方法で試行）
       await Promise.race([
@@ -57,7 +57,7 @@ test.describe("コンテンツ登録フロー", () => {
         path: "test-results/login-after-state.png",
         fullPage: true,
       });
-      
+
       // 現在のURLを強制的にコンテンツページに変更
       console.log("コンテンツページに直接移動します");
       await page.goto("/content");
