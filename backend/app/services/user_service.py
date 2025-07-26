@@ -55,7 +55,9 @@ async def get_user_id(request: Request) -> str:
     # 通常のクッキーアクセスで取得できない場合、ヘッダーから手動でパース
     if not id_token or not user_id:
         print("Cookies not found in request.cookies, trying header parsing...")
-        cookie_header = request.headers.get("cookie") or request.headers.get("Cookie")
+        cookie_header = request.headers.get("cookie") or request.headers.get(
+            "Cookie"
+        )
         if cookie_header:
             # 簡単なクッキーパース
             cookies = {}
@@ -81,6 +83,8 @@ async def get_user_id(request: Request) -> str:
             user_id, _, _ = user  # user_idだけ使用
         else:
             print("ERROR: Failed to extract user_id from id_token")
-            raise HTTPException(status_code=401, detail="Invalid or expired token")
+            raise HTTPException(
+                status_code=401, detail="Invalid or expired token"
+            )
 
     return user_id

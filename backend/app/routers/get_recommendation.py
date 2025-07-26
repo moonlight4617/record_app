@@ -4,8 +4,10 @@ from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, Query
 
 from app.schemas.content import ContentType, DependsData
-from app.services.content_service import (generate_recommendations_bedrock,
-                                          get_recent_contents_service)
+from app.services.content_service import (
+    generate_recommendations_bedrock,
+    get_recent_contents_service,
+)
 from app.services.depends_service import get_content_table_and_user_id
 
 router = APIRouter(prefix="/content")

@@ -108,9 +108,9 @@ async def login(auth_request: AuthRequest, response: JSONResponse):
                 path="/",  # パスを明示的に指定
             )
             response.set_cookie(
-                key="id_token", 
-                value=id_token, 
-                httponly=True, 
+                key="id_token",
+                value=id_token,
+                httponly=True,
                 samesite="Lax",
                 secure=False,
                 path="/",
@@ -124,9 +124,9 @@ async def login(auth_request: AuthRequest, response: JSONResponse):
                 path="/",
             )
             response.set_cookie(
-                key="user_id", 
-                value=user_id, 
-                httponly=True, 
+                key="user_id",
+                value=user_id,
+                httponly=True,
                 samesite="Lax",
                 secure=False,
                 path="/",

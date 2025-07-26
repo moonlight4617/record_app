@@ -3,10 +3,22 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from mangum import Mangum
 
-from app.routers import (add_content, add_watchlist, delete_watchlist,
-                         edit_content, get_recommendation, get_watchlist,
-                         get_year_contents, get_years, google_callback,
-                         google_login, login, logout, update_best, users)
+from app.routers import (
+    add_content,
+    add_watchlist,
+    delete_watchlist,
+    edit_content,
+    get_recommendation,
+    get_watchlist,
+    get_year_contents,
+    get_years,
+    google_callback,
+    google_login,
+    login,
+    logout,
+    update_best,
+    users,
+)
 
 app = FastAPI()
 origins = [
