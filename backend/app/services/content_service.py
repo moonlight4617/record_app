@@ -5,11 +5,19 @@ import requests
 
 import boto3
 
-from app.crud.content_crud import (add_content, add_watchlist, delete_best,
-                                   delete_watchlist_contents,
-                                   get_recent_contents, get_watchlist_contents,
-                                   get_year_best, get_year_contents, get_years,
-                                   update_best, update_content)
+from app.crud.content_crud import (
+    add_content,
+    add_watchlist,
+    delete_best,
+    delete_watchlist_contents,
+    get_recent_contents,
+    get_watchlist_contents,
+    get_year_best,
+    get_year_contents,
+    get_years,
+    update_best,
+    update_content,
+)
 from app.schemas.content import ContentData, RegisterContentData, watchlistData
 from app.utils import extract_year_from_date
 
@@ -98,11 +106,7 @@ def search_movie_links_tmdb(title: str) -> List[dict]:
 
         # 映画検索
         search_url = "https://api.themoviedb.org/3/search/movie"
-        params = {
-            "api_key": api_key,
-            "query": title,
-            "language": "ja-JP"
-        }
+        params = {"api_key": api_key, "query": title, "language": "ja-JP"}
 
         response = requests.get(search_url, params=params)
         if response.status_code != 200:
@@ -118,10 +122,14 @@ def search_movie_links_tmdb(title: str) -> List[dict]:
         links = []
 
         # TMDB詳細ページ
-        links.append({
-            "site_name": "The Movie Database",
-            "url": f"https://www.themoviedb.org/movie/{movie_id}?language=ja",
-        })
+        links.append(
+            {
+                "site_name": "The Movie Database",
+                "url": (
+                    f"https://www.themoviedb.org/movie/{movie_id}?language=ja"
+                ),
+            }
+        )
 
         # IMDb リンク (外部IDから取得)
         # external_url = (
@@ -143,10 +151,14 @@ def search_movie_links_tmdb(title: str) -> List[dict]:
         #         })
 
         # Amazon Prime Video (検索URL)
-        links.append({
-            "site_name": "Amazon Prime Video",
-            "url": f"https://www.amazon.co.jp/s?k={title}+映画&i=instant-video",
-        })
+        links.append(
+            {
+                "site_name": "Amazon Prime Video",
+                "url": (
+                    f"https://www.amazon.co.jp/s?k={title}+映画&i=instant-video"
+                ),
+            }
+        )
 
         return links
 
@@ -160,11 +172,7 @@ def search_book_links_google(title: str) -> List[dict]:
     try:
         # Google Books API (APIキー不要)
         search_url = "https://www.googleapis.com/books/v1/volumes"
-        params = {
-            "q": title,
-            "langRestrict": "ja",
-            "maxResults": 1
-        }
+        params = {"q": title, "langRestrict": "ja", "maxResults": 1}
 
         response = requests.get(search_url, params=params)
         if response.status_code != 200:
@@ -180,22 +188,28 @@ def search_book_links_google(title: str) -> List[dict]:
 
         # Google Books詳細ページ
         if book.get("id"):
-            links.append({
-                "site_name": "Google Books",
-                "url": f"https://books.google.co.jp/books?id={book['id']}",
-            })
+            links.append(
+                {
+                    "site_name": "Google Books",
+                    "url": f"https://books.google.co.jp/books?id={book['id']}",
+                }
+            )
 
         # Amazon検索
-        links.append({
-            "site_name": "Amazon",
-            "url": f"https://www.amazon.co.jp/s?k={title}+本",
-        })
+        links.append(
+            {
+                "site_name": "Amazon",
+                "url": f"https://www.amazon.co.jp/s?k={title}+本",
+            }
+        )
 
         # 楽天ブックス検索
-        links.append({
-            "site_name": "楽天ブックス",
-            "url": f"https://books.rakuten.co.jp/search?sitem={title}",
-        })
+        links.append(
+            {
+                "site_name": "楽天ブックス",
+                "url": f"https://books.rakuten.co.jp/search?sitem={title}",
+            }
+        )
 
         return links
 
@@ -208,11 +222,7 @@ def verify_book_exists(title: str) -> bool:
     """Google Books APIで書籍の実在を確認"""
     try:
         search_url = "https://www.googleapis.com/books/v1/volumes"
-        params = {
-            "q": title,
-            "langRestrict": "ja",
-            "maxResults": 1
-        }
+        params = {"q": title, "langRestrict": "ja", "maxResults": 1}
 
         response = requests.get(search_url, params=params)
         if response.status_code != 200:
@@ -246,9 +256,7 @@ def search_external_api_links(title: str, content_type: str) -> List[dict]:
         return []
 
 
-def generate_recommendations_bedrock(
-    type: str, history: List[str]
-) -> str:
+def generate_recommendations_bedrock(type: str, history: List[str]) -> str:
     # TODO: 一時コミット。後ほど整理
     """Amazon Bedrockを使ってレコメンドを生成"""
     try:
@@ -336,7 +344,9 @@ def generate_recommendations_bedrock(
                     # 書籍の場合は実在確認
                     if type == "book":
                         if not verify_book_exists(rec["title"]):
-                            print(f"書籍 '{rec['title']}' は実在しないため除外します")
+                            print(
+                                f"書籍 '{rec['title']}' は実在しないため除外します"
+                            )
                             continue
 
                     # リンク取得
@@ -344,7 +354,9 @@ def generate_recommendations_bedrock(
 
                     # リンクが取得できない場合は架空作品として除外
                     if not links or len(links) == 0:
-                        print(f"作品 '{rec['title']}' のリンクが取得できないため除外します")
+                        print(
+                            f"作品 '{rec['title']}' のリンクが取得できないため除外します"
+                        )
                         continue
 
                     rec["links"] = links

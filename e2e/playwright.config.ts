@@ -1,7 +1,10 @@
 import { defineConfig, devices } from "@playwright/test";
+import * as dotenv from 'dotenv';
+
+// 環境変数ファイルを読み込み
+dotenv.config({ path: '.env' });
 
 const baseURL = process.env.BASE_URL || "http://localhost:3000";
-const apiURL = process.env.API_URL || "http://localhost:8000";
 
 export default defineConfig({
   testDir: "./tests",
@@ -20,6 +23,9 @@ export default defineConfig({
     video: "retain-on-failure",
     // コンテナ環境での実行時の設定
     headless: true,
+    // タイムアウトを延長
+    actionTimeout: 30000,
+    navigationTimeout: 30000,
   },
   projects: [
     {

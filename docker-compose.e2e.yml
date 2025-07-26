@@ -1,18 +1,38 @@
 version: "3.8"
 
 services:
-  frontend:
-    environment:
-      - NEXT_PUBLIC_API_URL=http://backend:8000
+  # Nginxリバースプロキシ
+  nginx:
+    image: nginx:alpine
+    container_name: e2e-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - frontend
+      - backend
     networks:
       - default
+    restart: unless-stopped
 
+  # 既存のfrontendサービスを継承し、環境変数のみ上書き
+  frontend:
+    extends:
+      file: docker-compose.yml
+      service: frontend
+    environment:
+      # Nginxを経由するように変更
+      - NEXT_PUBLIC_API_URL=http://nginx/api
+
+  # 既存のbackendサービスを継承し、環境変数のみ追加
   backend:
+    extends:
+      file: docker-compose.yml
+      service: backend
     environment:
       - ENV=local
       - E2E_TEST_MODE=true
-    networks:
-      - default
 
   e2e-tests:
     build:
@@ -23,11 +43,13 @@ services:
       - ./e2e:/app
       - /app/node_modules
     ports:
-      - "9323:9323"
+      - "9324:9323"
     environment:
-      - BASE_URL=http://frontend:3000
-      - API_URL=http://backend:8000
+      # 統一ドメインを使用
+      - BASE_URL=http://nginx
+      - API_URL=http://nginx/api
     depends_on:
+      - nginx
       - frontend
       - backend
     networks:
@@ -35,5 +57,4 @@ services:
     command: npm run test:e2e
 networks:
   default:
-    external: true
-    name: record_app_default
+    driver: bridge

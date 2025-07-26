@@ -1,0 +1,24 @@
+# Node.js関連
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Next.js関連
+.next/
+.swc/
+out/
+
+# テスト結果
+test-results/
+playwright-report/
+coverage/
+
+# 環境ファイル
+.env*.local
+
+# その他
+.DS_Store
+*.tsbuildinfo
+.cache

@@ -48,9 +48,9 @@ export const EditModal: React.FC<EditModalProps> = ({
   if (!content) return null;
 
   return (
-    <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded shadow-md md:w-1/2 w-11/12">
-        <h2 className="text-xl font-bold mb-4">メモ編集</h2>
+    <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50" data-testid="edit-modal-backdrop">
+      <div className="bg-white p-6 rounded shadow-md md:w-1/2 w-11/12" data-testid="edit-modal-content">
+        <h2 className="text-xl font-bold mb-4" data-testid="edit-modal-title">メモ編集</h2>
 
         <form
           onSubmit={(e) => {
@@ -68,7 +68,7 @@ export const EditModal: React.FC<EditModalProps> = ({
         >
           <InputContentArea content={content as RegisterContentDataType} />
           <div className="flex justify-end mt-4">
-            <Button type="submit" className="mr-4">
+            <Button type="submit" className="mr-4" data-testid="save-button">
               {isWatchllist ? "閲覧済に更新" : "保存"}
             </Button>
             <Button
@@ -76,6 +76,7 @@ export const EditModal: React.FC<EditModalProps> = ({
               type="button"
               variant="cancel"
               className="mr-2"
+              data-testid="cancel-button"
             >
               キャンセル
             </Button>

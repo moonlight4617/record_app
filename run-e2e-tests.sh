@@ -11,6 +11,30 @@ cd "$(dirname "$0")"
 echo "既存のfrontendとbackendサービスを確認中..."
 docker-compose ps
 
+# E2Eテストに必要なNginxプロキシの起動を確認・実行
+echo "E2EテストのためのNginxプロキシを確認中..."
+if command -v jq >/dev/null 2>&1; then
+    nginx_running=$(docker-compose -f docker-compose.yml -f docker-compose.e2e.yml ps nginx --format json 2>/dev/null | jq -r '.State' 2>/dev/null || echo "not_found")
+else
+    # jqが使えない場合の代替方法
+    nginx_status=$(docker-compose -f docker-compose.yml -f docker-compose.e2e.yml ps nginx 2>/dev/null | grep nginx | grep -o "running\|Up" || echo "not_found")
+    if [ "$nginx_status" = "running" ] || [ "$nginx_status" = "Up" ]; then
+        nginx_running="running"
+    else
+        nginx_running="not_found"
+    fi
+fi
+
+if [ "$nginx_running" != "running" ]; then
+    echo "Nginxプロキシが停止中または未起動です。E2E環境を起動します..."
+    docker-compose -f docker-compose.yml -f docker-compose.e2e.yml up -d nginx
+    echo "Nginxプロキシの起動完了を待機中..."
+    sleep 5
+    echo "Nginxプロキシの起動完了"
+else
+    echo "Nginxプロキシは既に起動中です"
+fi
+
 # サービスが起動するまで待機
 echo "フロントエンドとバックエンドサービスの準備完了を待機中..."
 timeout=60
@@ -20,16 +44,16 @@ while [ $counter -lt $timeout ]; do
     # より安全な方法でサービスの状態をチェック
     frontend_ready=false
     backend_ready=false
-    
-    # フロントエンドの確認
+
+    # Nginxプロキシ経由でフロントエンドの確認
     if command -v curl >/dev/null 2>&1; then
-        if curl -f http://localhost:3000 >/dev/null 2>&1; then
+        if curl -f http://localhost/ >/dev/null 2>&1; then
             frontend_ready=true
         fi
     else
         # curlが使えない場合はwgetを試す
         if command -v wget >/dev/null 2>&1; then
-            if wget -q --spider http://localhost:3000 2>/dev/null; then
+            if wget -q --spider http://localhost 2>/dev/null; then
                 frontend_ready=true
             fi
         else
@@ -39,15 +63,15 @@ while [ $counter -lt $timeout ]; do
             fi
         fi
     fi
-    
-    # バックエンドの確認
+
+    # Nginxプロキシ経由でバックエンドの確認
     if command -v curl >/dev/null 2>&1; then
-        if curl -f http://localhost:8000/health >/dev/null 2>&1; then
+        if curl -f http://localhost/api/health >/dev/null 2>&1; then
             backend_ready=true
         fi
     else
         if command -v wget >/dev/null 2>&1; then
-            if wget -q --spider http://localhost:8000/health 2>/dev/null; then
+            if wget -q --spider http://localhost/api/health 2>/dev/null; then
                 backend_ready=true
             fi
         else
@@ -56,12 +80,12 @@ while [ $counter -lt $timeout ]; do
             fi
         fi
     fi
-    
+
     if [ "$frontend_ready" = true ] && [ "$backend_ready" = true ]; then
         echo "サービスの準備が完了しました"
         break
     fi
-    
+
     echo "サービス起動を待機中... ($counter/$timeout) [Frontend: $frontend_ready, Backend: $backend_ready]"
     sleep 2
     counter=$((counter + 2))
