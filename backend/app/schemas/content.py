@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field
 class DependsData(BaseModel):
     table: Any
     user_id: str
+    is_premium: bool = False  # 有料会員フラグ（存在しない / false なら無料）
 
 
 class ContentType(str, Enum):

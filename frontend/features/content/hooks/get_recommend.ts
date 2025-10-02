@@ -32,11 +32,33 @@ export const useGetRecommend = (): UseGetRecommendReturn => {
       }
       const data = await response.json();
       console.log("data: ", data);
-      const jsonData = JSON.parse(data?.recommendations);
-      console.log("jsonData: ", jsonData);
-      console.log("jsonData type: ", typeof jsonData);
-      console.log("jsonData?.recommendations: ", jsonData?.recommendations);
-      return jsonData?.recommendations;
+
+      // isPremium が false の場合や message がある場合は、そのまま返す
+      if (
+        data?.isPremium === false ||
+        (data?.message && !data?.recommendations)
+      ) {
+        return {
+          success: false,
+          message: data?.message,
+          recommendations: [],
+          isPremium: data?.isPremium,
+        };
+      }
+
+      // recommendations が JSON 文字列の場合はパース
+      let recommendations = data?.recommendations;
+      if (typeof recommendations === "string") {
+        const jsonData = JSON.parse(recommendations);
+        recommendations = jsonData?.recommendations || [];
+      }
+
+      return {
+        success: true,
+        recommendations: recommendations,
+        isPremium: data?.isPremium,
+        message: data?.message,
+      };
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "An unknown error occurred";

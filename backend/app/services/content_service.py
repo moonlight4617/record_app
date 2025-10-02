@@ -257,7 +257,6 @@ def search_external_api_links(title: str, content_type: str) -> List[dict]:
 
 
 def generate_recommendations_bedrock(type: str, history: List[str]) -> str:
-    # TODO: 一時コミット。後ほど整理
     """Amazon Bedrockを使ってレコメンドを生成"""
     try:
 
