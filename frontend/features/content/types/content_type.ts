@@ -93,13 +93,6 @@ export type DeleteWatchlistResult = {
   message?: string;
 };
 
-// TODO: 不要そうであれば後ほど削除
-// export type UseUpdateBestReturn = {
-//   updateBest: (content: ContentDataType[]) => Promise<UpdateBestResult>;
-//   loading: boolean;
-//   error: string | null;
-// };
-
 export type UpdateBestResult = {
   success: boolean;
   message?: string;
@@ -109,6 +102,7 @@ export type GetRecommendResult = {
   success: boolean;
   message?: string;
   recommendations?: RecommendContentsType[];
+  isPremium?: boolean;
 };
 
 export type UseLogoutReturn = {
